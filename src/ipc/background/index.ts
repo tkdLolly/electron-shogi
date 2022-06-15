@@ -4,11 +4,13 @@ import fs from "fs";
 import {
   loadAnalysisSetting,
   loadAppSetting,
+  loadExtensionSetting,
   loadGameSetting,
   loadResearchSetting,
   loadUSIEngineSetting,
   saveAnalysisSetting,
   saveAppSetting,
+  saveExtensionSetting,
   saveGameSetting,
   saveResearchSetting,
   saveUSIEngineSetting,
@@ -31,6 +33,7 @@ import {
 import { GameResult } from "@/players/player";
 import { LogLevel } from "@/ipc/log";
 import { getAppLogger } from "./log";
+import * as extension from "./extension";
 
 const isWindows = process.platform === "win32";
 
@@ -240,6 +243,47 @@ ipcMain.handle(Background.USI_QUIT, (_, sessionID: number) => {
   usiQuit(sessionID);
 });
 
+ipcMain.handle(Background.LOAD_EXTENSION_SETTING, (): string => {
+  return JSON.stringify(loadExtensionSetting());
+});
+
+ipcMain.handle(Background.SAVE_EXTENSION_SETTING, (_, json: string): void => {
+  saveExtensionSetting(JSON.parse(json));
+});
+
+ipcMain.handle(Background.SHOW_SELECT_EXTENSION_DIALOG, (): string => {
+  const win = BrowserWindow.getFocusedWindow();
+  if (!win) {
+    throw "予期せぬエラーでダイアログを表示せきません。";
+  }
+  const results = dialog.showOpenDialogSync(win, {
+    properties: ["openFile", "noResolveAliases"],
+    filters: [{ name: "JSON", extensions: ["json"] }],
+  });
+  return results && results.length === 1 ? results[0] : "";
+});
+
+function isValidExtensionConfigFilePath(path: string) {
+  return path.endsWith(".json");
+}
+
+ipcMain.handle(
+  Background.LOAD_EXTENSION_CONFIG_FILE,
+  (_, path: string): string => {
+    if (!isValidExtensionConfigFilePath(path)) {
+      throw new Error(`取り扱いできないファイル拡張子です`);
+    }
+    return JSON.stringify(extension.loadConfigFile(path));
+  }
+);
+
+ipcMain.handle(
+  Background.EXECUTE_EXTENSION,
+  async (_, path: string, variables: string) => {
+    return await extension.execute(path, JSON.parse(variables));
+  }
+);
+
 ipcMain.handle(Background.LOG, (_, level: LogLevel, message: string) => {
   switch (level) {
     case LogLevel.INFO:
@@ -285,4 +329,16 @@ export function onUSIInfo(
     name,
     JSON.stringify(info)
   );
+}
+
+export function onExtensionMessage(sessionID: number, instruction: string) {
+  mainWindow.webContents.send(
+    Renderer.EXTENSION_MESSAGE,
+    sessionID,
+    instruction
+  );
+}
+
+export function onExtensionQuit(sessionID: number) {
+  mainWindow.webContents.send(Renderer.EXTENSION_QUIT, sessionID);
 }

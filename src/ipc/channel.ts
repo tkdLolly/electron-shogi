@@ -25,6 +25,11 @@ export enum Background {
   USI_STOP = "usiStop",
   USI_GAMEOVER = "usiGameover",
   USI_QUIT = "usiQuit",
+  LOAD_EXTENSION_SETTING = "loadExtensionSetting",
+  SAVE_EXTENSION_SETTING = "saveExtensionSetting",
+  SHOW_SELECT_EXTENSION_DIALOG = "showSelectExtensionDialog",
+  LOAD_EXTENSION_CONFIG_FILE = "loadExtensionConfigFile",
+  EXECUTE_EXTENSION = "executeExtension",
   LOG = "log",
 }
 
@@ -33,4 +38,6 @@ export enum Renderer {
   MENU_EVENT = "menuEvent",
   USI_BEST_MOVE = "usiBestMove",
   USI_INFO = "usiInfo",
+  EXTENSION_MESSAGE = "extensionMessage",
+  EXTENSION_QUIT = "extensionQuit",
 }

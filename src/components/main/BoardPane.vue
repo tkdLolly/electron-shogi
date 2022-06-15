@@ -120,6 +120,14 @@
             <option value="tsumeShogi">詰め将棋</option>
             <option value="tsumeShogi2Kings">双玉詰め将棋</option>
           </select>
+          <button
+            v-if="controlStates.extension"
+            class="control-item"
+            @click="onExtension"
+          >
+            <ButtonIcon class="icon" :icon="Icon.EXTENSION" />
+            拡張機能
+          </button>
         </div>
       </template>
       <template #left-control>
@@ -252,6 +260,10 @@ export default defineComponent({
       }
     };
 
+    const onExtension = () => {
+      store.openExtensionDialog();
+    };
+
     const onChangeTurn = () => {
       store.changeTurn();
     };
@@ -332,6 +344,7 @@ export default defineComponent({
         startEditPosition: store.appState === AppState.NORMAL,
         endEditPosition: store.appState === AppState.POSITION_EDITING,
         initPosition: store.appState === AppState.POSITION_EDITING,
+        extension: store.appState === AppState.NORMAL,
         removeAfter:
           store.appState === AppState.NORMAL ||
           store.appState === AppState.RESEARCH,
@@ -363,6 +376,7 @@ export default defineComponent({
       onStartEditPosition,
       onEndEditPosition,
       onInitPosition,
+      onExtension,
       onChangeTurn,
       onOpenAppSettings,
       onOpenEngineSettings,

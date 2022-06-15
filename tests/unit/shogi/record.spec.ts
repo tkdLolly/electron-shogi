@@ -272,7 +272,7 @@ describe("shogi/record", () => {
   it("newByUSI/sfen", () => {
     // 飛車香落ち51手
     const data =
-      "sfen lnsgkgsn1/7b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1 moves 7g7f 3c3d 2g2f 4c4d 2f2e 2b3c 1g1f 3a4b 1f1e 4b4c 2h1h 4a3b 1e1d 1c1d 1h1d P*1c 1d1h 5a4b 4g4f 6a7b 1h4h 7a6b 3i3h 5c5d 3h4g 6b5c 4g5f 7c7d P*1b 8a7c 4f4e 6c6d 4e4d 5c4d P*4e 4d5e 5f5e 5d5e S*4d 4c4d 4e4d S*5d 1b1a+ 3c1a S*1b 1a3c 1b2a P*4e 2a3b+ 4b3b N*6f";
+      "lnsgkgsn1/7b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1 moves 7g7f 3c3d 2g2f 4c4d 2f2e 2b3c 1g1f 3a4b 1f1e 4b4c 2h1h 4a3b 1e1d 1c1d 1h1d P*1c 1d1h 5a4b 4g4f 6a7b 1h4h 7a6b 3i3h 5c5d 3h4g 6b5c 4g5f 7c7d P*1b 8a7c 4f4e 6c6d 4e4d 5c4d P*4e 4d5e 5f5e 5d5e S*4d 4c4d 4e4d S*5d 1b1a+ 3c1a S*1b 1a3c 1b2a P*4e 2a3b+ 4b3b N*6f";
     const record = Record.newByUSI(data) as Record;
     expect(record).toBeInstanceOf(Record);
     expect(record.length).toBe(51);
@@ -290,7 +290,7 @@ describe("shogi/record", () => {
   it("newByUSI/sfen-no-moves", () => {
     // 平手途中局面・指し手無し
     const data =
-      "sfen ln1g2g1l/2s2k3/2ppp3p/5p2b/P2r1N3/2P2P3/1P1PP1P1P/1SGKG2+R1/LN5NL b S5Pbs 57";
+      "ln1g2g1l/2s2k3/2ppp3p/5p2b/P2r1N3/2P2P3/1P1PP1P1P/1SGKG2+R1/LN5NL b S5Pbs 57";
     const record = Record.newByUSI(data) as Record;
     expect(record).toBeInstanceOf(Record);
     expect(record.length).toBe(0);

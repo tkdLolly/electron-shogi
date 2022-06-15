@@ -33,6 +33,7 @@ export enum Icon {
   DESCRIPTION = "description",
   PLAY = "play",
   CLOSE = "close",
+  EXTENSION = "extension",
 }
 
 export const iconSourceMap = {
@@ -68,6 +69,7 @@ export const iconSourceMap = {
   [Icon.DESCRIPTION]: "icon/description_white_24dp.svg",
   [Icon.PLAY]: "icon/play_arrow_FILL1_wght400_GRAD0_opsz48.svg",
   [Icon.CLOSE]: "icon/close_FILL0_wght400_GRAD0_opsz48.svg",
+  [Icon.EXTENSION]: "icon/extension_FILL0_wght400_GRAD0_opsz48.svg",
 };
 
 Object.values(iconSourceMap).forEach((source) => {
