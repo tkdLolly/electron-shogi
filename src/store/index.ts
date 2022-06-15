@@ -48,6 +48,8 @@ import { Clock } from "./clock";
 import { CSAGameSetting, appendCSAGameSettingHistory } from "@/settings/csa";
 import { defaultPlayerBuilder } from "@/players/builder";
 import { USIInfoCommand, USIInfoSender } from "@/ipc/usi";
+import { ExtensionSetting } from "@/settings/extension";
+import { buildExtension, Extension } from "@/extension";
 
 export class Store {
   private _bussy = new BussyStore();
@@ -79,6 +81,7 @@ export class Store {
   private researcher?: USIPlayer;
   private analysisManager?: AnalysisManager;
   private unlimitedBeepHandler?: AudioEventHandler;
+  private extension?: Extension;
 
   constructor() {
     this.recordManager.on("changePosition", () => {
@@ -264,9 +267,16 @@ export class Store {
       this.appState === AppState.CSA_GAME_DIALOG ||
       this.appState === AppState.RESEARCH_DIALOG ||
       this.appState === AppState.ANALYSIS_DIALOG ||
-      this.appState === AppState.USI_ENGINE_SETTING_DIALOG
+      this.appState === AppState.USI_ENGINE_SETTING_DIALOG ||
+      this.appState === AppState.EXTENSION_DIALOG
     ) {
       this._appState = AppState.NORMAL;
+    }
+  }
+
+  openExtensionDialog(): void {
+    if (this.appState === AppState.NORMAL) {
+      this._appState = AppState.EXTENSION_DIALOG;
     }
   }
 
@@ -892,6 +902,42 @@ export class Store {
     } finally {
       this.releaseBussyState();
     }
+  }
+
+  executeExtension(setting: ExtensionSetting): void {
+    this.executeExtensionAsync(setting).catch((e) => {
+      this.pushError(e);
+    });
+  }
+
+  private async executeExtensionAsync(
+    setting: ExtensionSetting
+  ): Promise<void> {
+    if (this.appState !== AppState.EXTENSION_DIALOG) {
+      return;
+    }
+    this.retainBussyState();
+    try {
+      this.extension = await buildExtension(setting);
+      await this.extension.execute();
+      this._appState = AppState.EXTENSION_CONNECTED;
+      this.retainBussyState();
+    } finally {
+      this.releaseBussyState();
+    }
+  }
+
+  onQuitExtension(sessionID: number): void {
+    if (
+      this.appState !== AppState.EXTENSION_CONNECTED ||
+      !this.extension ||
+      this.extension.sessionID !== sessionID
+    ) {
+      return;
+    }
+    this._appState = AppState.NORMAL;
+    this.extension = undefined;
+    this.releaseBussyState();
   }
 
   get isMovableByUser() {

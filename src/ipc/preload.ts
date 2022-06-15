@@ -164,6 +164,28 @@ const api: Bridge = {
   async isEncryptionAvailable(): Promise<boolean> {
     return await ipcRenderer.invoke(Background.IS_ENCRYPTION_AVAILABLE);
   },
+  async loadExtensionSetting(): Promise<string> {
+    return await ipcRenderer.invoke(Background.LOAD_EXTENSION_SETTING);
+  },
+  async saveExtensionSetting(json: string): Promise<void> {
+    await ipcRenderer.invoke(Background.SAVE_EXTENSION_SETTING, json);
+  },
+  async showSelectExtensionDialog(): Promise<string> {
+    return await ipcRenderer.invoke(Background.SHOW_SELECT_EXTENSION_DIALOG);
+  },
+  async loadExtensionConfigFile(path: string): Promise<string> {
+    return await ipcRenderer.invoke(
+      Background.LOAD_EXTENSION_CONFIG_FILE,
+      path
+    );
+  },
+  async executeExtension(path: string, variables: string): Promise<number> {
+    return await ipcRenderer.invoke(
+      Background.EXECUTE_EXTENSION,
+      path,
+      variables
+    );
+  },
   log(level: LogLevel, message: string): void {
     ipcRenderer.invoke(Background.LOG, level, message);
   },
@@ -264,6 +286,21 @@ const api: Bridge = {
   },
   onCSAClose(callback: (sessionID: number) => void): void {
     ipcRenderer.on(Renderer.CSA_CLOSE, (_, sessionID) => {
+      callback(sessionID);
+    });
+  },
+  onExtensionCommand(
+    callback: (sessionID: number, command: string) => void
+  ): void {
+    ipcRenderer.on(
+      Renderer.EXTENSION_COMMAND,
+      (_, sessionID: number, command: string) => {
+        callback(sessionID, command);
+      }
+    );
+  },
+  onExtensionQuit(callback: (sessionID: number) => void): void {
+    ipcRenderer.on(Renderer.EXTENSION_QUIT, (_, sessionID: number) => {
       callback(sessionID);
     });
   },

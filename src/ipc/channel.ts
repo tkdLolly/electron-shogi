@@ -38,6 +38,11 @@ export enum Background {
   CSA_WIN = "csaWin",
   CSA_STOP = "csaStop",
   IS_ENCRYPTION_AVAILABLE = "isEncryptionAvailable",
+  LOAD_EXTENSION_SETTING = "loadExtensionSetting",
+  SAVE_EXTENSION_SETTING = "saveExtensionSetting",
+  SHOW_SELECT_EXTENSION_DIALOG = "showSelectExtensionDialog",
+  LOAD_EXTENSION_CONFIG_FILE = "loadExtensionConfigFile",
+  EXECUTE_EXTENSION = "executeExtension",
   LOG = "log",
 }
 
@@ -53,4 +58,6 @@ export enum Renderer {
   CSA_MOVE = "csaMove",
   CSA_GAME_RESULT = "csaGameResult",
   CSA_CLOSE = "csaClose",
+  EXTENSION_COMMAND = "extensionCommand",
+  EXTENSION_QUIT = "extensionQuit",
 }

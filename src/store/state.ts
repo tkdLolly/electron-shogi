@@ -11,5 +11,7 @@ export enum AppState {
   ANALYSIS = "analysis",
   ANALYSIS_DIALOG = "analysisDialog",
   USI_ENGINE_SETTING_DIALOG = "usiEngineSettingDialog",
+  EXTENSION_DIALOG = "extensionDialog",
+  EXTENSION_CONNECTED = "extensionConnected",
   TEMPORARY = "temporary",
 }

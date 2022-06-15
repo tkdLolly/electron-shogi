@@ -5,6 +5,7 @@ import { defaultResearchSetting } from "@/settings/research";
 import { USIEngineSettings } from "@/settings/usi";
 import { LogLevel } from "./log";
 import { Bridge } from "./api";
+import { defaultExtensionSettings } from "@/settings/extension";
 
 enum STORAGE_KEY {
   APP_SETTING = "appSetting",
@@ -12,6 +13,7 @@ enum STORAGE_KEY {
   ANALYSIS_SETTING = "analysisSetting",
   GAME_SETTING = "gameSetting",
   CSA_GAME_SETTING_HISTORY = "csaGameSettingHistory",
+  EXTENSION_SETTING = "extensionSetting",
 }
 
 // Electron を使わずにシンプルな Web アプリケーションとして実行した場合に使用します。
@@ -161,6 +163,28 @@ export const webAPI: Bridge = {
   async isEncryptionAvailable(): Promise<boolean> {
     return false;
   },
+  async loadExtensionSetting(): Promise<string> {
+    const json = localStorage.getItem(STORAGE_KEY.EXTENSION_SETTING);
+    if (!json) {
+      return JSON.stringify(defaultExtensionSettings());
+    }
+    return JSON.stringify({
+      ...defaultExtensionSettings(),
+      ...JSON.parse(json),
+    });
+  },
+  async saveExtensionSetting(json: string): Promise<void> {
+    localStorage.setItem(STORAGE_KEY.EXTENSION_SETTING, json);
+  },
+  async showSelectExtensionDialog(): Promise<string> {
+    throw "Web版では利用できない機能です。";
+  },
+  async loadExtensionConfigFile(): Promise<string> {
+    throw "Web版では利用できない機能です。";
+  },
+  async executeExtension(): Promise<number> {
+    throw "Web版では利用できない機能です。";
+  },
   log(level: LogLevel, message: string): void {
     switch (level) {
       case LogLevel.INFO:
@@ -205,6 +229,12 @@ export const webAPI: Bridge = {
     // Do Nothing
   },
   onCSAClose(): void {
+    // Do Nothing
+  },
+  onExtensionCommand(): void {
+    // Do Nothing
+  },
+  onExtensionQuit(): void {
     // Do Nothing
   },
 };

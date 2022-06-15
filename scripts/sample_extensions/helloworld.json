@@ -1,0 +1,7 @@
+{
+  "scheme": "electron-shogi:extension",
+  "name": "Hello World Sample",
+  "command": "node",
+  "arguments": ["helloworld.mjs"],
+  "workingDirectory": "."
+}

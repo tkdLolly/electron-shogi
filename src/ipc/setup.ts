@@ -16,6 +16,7 @@ import {
   onCSAStart,
 } from "@/store/csa";
 import { CSAGameResult, CSASpecialMove } from "./csa";
+import { onExtensionCommand } from "@/extension/command";
 
 export function setup(): void {
   const store = useStore();
@@ -238,6 +239,12 @@ export function setup(): void {
   );
   bridge.onCSAClose((sessionID: number) => {
     onCSAClose(sessionID);
+  });
+  bridge.onExtensionCommand((sessionID: number, command: string) => {
+    onExtensionCommand(sessionID, JSON.parse(command.replaceAll("'", '"')));
+  });
+  bridge.onExtensionQuit((sessionID: number) => {
+    store.onQuitExtension(sessionID);
   });
   watch(
     () => [store.appState, store.isBussy],

@@ -8,6 +8,7 @@
     <USIEngineManagementDialog v-if="dialogVisibilities.usiEngineSetting" />
     <AppSettingDialog v-if="dialogVisibilities.appSetting" />
     <PasteDialog v-if="dialogVisibilities.paste" />
+    <ExtensionDialog v-if="dialogVisibilities.extension" />
     <BussyMessage v-if="dialogVisibilities.bussy" />
     <ConfirmDialog v-if="dialogVisibilities.confirm" />
     <CSAGameReadyDialog v-if="dialogVisibilities.csaGameReady" />
@@ -23,6 +24,7 @@ import GameDialog from "@/components/dialog/GameDialog.vue";
 import CSAGameDialog from "@/components/dialog/CSAGameDialog.vue";
 import ResearchDialog from "@/components/dialog/ResearchDialog.vue";
 import USIEngineManagementDialog from "@/components/dialog/USIEngineManagementDialog.vue";
+import ExtensionDialog from "@/components/dialog/ExtensionDialog.vue";
 import AppSettingDialog from "@/components/dialog/AppSettingDialog.vue";
 import PasteDialog from "@/components/dialog/PasteDialog.vue";
 import BussyMessage from "@/components/dialog/BussyMessage.vue";
@@ -44,6 +46,7 @@ export default defineComponent({
     CSAGameDialog,
     ResearchDialog,
     USIEngineManagementDialog,
+    ExtensionDialog,
     AppSettingDialog,
     PasteDialog,
     BussyMessage,
@@ -65,6 +68,7 @@ export default defineComponent({
         research: store.appState === AppState.RESEARCH_DIALOG,
         analysis: store.appState === AppState.ANALYSIS_DIALOG,
         usiEngineSetting: store.appState === AppState.USI_ENGINE_SETTING_DIALOG,
+        extension: store.appState === AppState.EXTENSION_DIALOG,
         appSetting: store.isAppSettingDialogVisible,
         paste: store.appState === AppState.PASTE_DIALOG,
         bussy: store.isBussy,

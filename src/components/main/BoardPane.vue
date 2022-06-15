@@ -113,6 +113,14 @@
           >
             局面の初期化
           </button>
+          <button
+            v-if="controlStates.extension"
+            class="control-item"
+            @click="onExtension"
+          >
+            <ButtonIcon class="icon" :icon="Icon.EXTENSION" />
+            拡張機能
+          </button>
         </div>
       </template>
       <template #left-control>
@@ -257,6 +265,10 @@ export default defineComponent({
       isInitialPositionMenuVisible.value = true;
     };
 
+    const onExtension = () => {
+      store.openExtensionDialog();
+    };
+
     const onChangeTurn = () => {
       store.changeTurn();
     };
@@ -345,6 +357,7 @@ export default defineComponent({
         startEditPosition: store.appState === AppState.NORMAL,
         endEditPosition: store.appState === AppState.POSITION_EDITING,
         initPosition: store.appState === AppState.POSITION_EDITING,
+        extension: store.appState === AppState.NORMAL,
         removeCurrentMove:
           store.appState === AppState.NORMAL ||
           store.appState === AppState.RESEARCH,
@@ -377,6 +390,7 @@ export default defineComponent({
       onStartEditPosition,
       onEndEditPosition,
       onInitPosition,
+      onExtension,
       onChangeTurn,
       onOpenAppSettings,
       onOpenEngineSettings,

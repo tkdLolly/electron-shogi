@@ -6,12 +6,14 @@ import {
   loadAnalysisSetting,
   loadAppSetting,
   loadCSAGameSettingHistory,
+  loadExtensionSetting,
   loadGameSetting,
   loadResearchSetting,
   loadUSIEngineSetting,
   saveAnalysisSetting,
   saveAppSetting,
   saveCSAGameSettingHistory,
+  saveExtensionSetting,
   saveGameSetting,
   saveResearchSetting,
   saveUSIEngineSetting,
@@ -53,6 +55,7 @@ import {
 } from "@/ipc/csa";
 import { CSAServerSetting } from "@/settings/csa";
 import { isEncryptionAvailable } from "./encrypt";
+import * as extension from "./extension";
 
 const isWindows = process.platform === "win32";
 
@@ -335,6 +338,40 @@ ipcMain.handle(
   }
 );
 
+ipcMain.handle(Background.LOAD_EXTENSION_SETTING, (): string => {
+  return JSON.stringify(loadExtensionSetting());
+});
+
+ipcMain.handle(Background.SAVE_EXTENSION_SETTING, (_, json: string): void => {
+  saveExtensionSetting(JSON.parse(json));
+});
+
+ipcMain.handle(Background.SHOW_SELECT_EXTENSION_DIALOG, (): string => {
+  const win = BrowserWindow.getFocusedWindow();
+  if (!win) {
+    throw "予期せぬエラーでダイアログを表示せきません。";
+  }
+  const results = dialog.showOpenDialogSync(win, {
+    properties: ["openFile", "noResolveAliases"],
+    filters: [{ name: "JSON", extensions: ["json"] }],
+  });
+  return results && results.length === 1 ? results[0] : "";
+});
+
+function isValidExtensionConfigFilePath(path: string) {
+  return path.endsWith(".json");
+}
+
+ipcMain.handle(
+  Background.LOAD_EXTENSION_CONFIG_FILE,
+  (_, path: string): string => {
+    if (!isValidExtensionConfigFilePath(path)) {
+      throw new Error(`取り扱いできないファイル拡張子です`);
+    }
+    return JSON.stringify(extension.loadConfigFile(path));
+  }
+);
+
 ipcMain.handle(
   Background.CSA_MOVE,
   (_, sessionID: number, move: string): void => {
@@ -357,6 +394,13 @@ ipcMain.handle(Background.CSA_STOP, (_, sessionID: number): void => {
 ipcMain.handle(Background.IS_ENCRYPTION_AVAILABLE, (): boolean => {
   return isEncryptionAvailable();
 });
+
+ipcMain.handle(
+  Background.EXECUTE_EXTENSION,
+  async (_, path: string, variables: string) => {
+    return await extension.execute(path, JSON.parse(variables));
+  }
+);
 
 ipcMain.handle(Background.LOG, (_, level: LogLevel, message: string) => {
   switch (level) {
@@ -483,4 +527,12 @@ export function onCSAGameResult(
 
 export function onCSAClose(sessionID: number): void {
   mainWindow.webContents.send(Renderer.CSA_CLOSE, sessionID);
+}
+
+export function onExtensionCommand(sessionID: number, command: string) {
+  mainWindow.webContents.send(Renderer.EXTENSION_COMMAND, sessionID, command);
+}
+
+export function onExtensionQuit(sessionID: number) {
+  mainWindow.webContents.send(Renderer.EXTENSION_QUIT, sessionID);
 }

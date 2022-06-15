@@ -10,3 +10,11 @@ export function issueEngineURI(): string {
   const rand = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16);
   return ES_USI_ENGINE + `${now}/${rand}`;
 }
+
+export const ES_EXTENSION = "es://extension/";
+
+export function issueExtensionURI(): string {
+  const now = Date.now();
+  const rand = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16);
+  return ES_EXTENSION + `${now}/${rand}`;
+}

@@ -16,6 +16,10 @@ import {
   encryptCSAGameSettingHistory,
 } from "@/settings/csa";
 import { DecryptString, EncryptString, isEncryptionAvailable } from "./encrypt";
+import {
+  defaultExtensionSettings,
+  ExtensionSettings,
+} from "@/settings/extension";
 
 const rootDir = app.getPath("userData");
 const docDir = path.join(app.getPath("documents"), "ElectronShogi");
@@ -187,5 +191,25 @@ export function loadAnalysisSetting(): AnalysisSetting {
   return {
     ...defaultAnalysisSetting(),
     ...JSON.parse(fs.readFileSync(analysisSettingPath, "utf8")),
+  };
+}
+
+const extensionSettingPath = path.join(rootDir, "extension_setting.json");
+
+export function saveExtensionSetting(setting: USIEngineSettings): void {
+  fs.writeFileSync(
+    extensionSettingPath,
+    JSON.stringify(setting, undefined, 2),
+    "utf8"
+  );
+}
+
+export function loadExtensionSetting(): ExtensionSettings {
+  if (!fs.existsSync(extensionSettingPath)) {
+    return defaultExtensionSettings();
+  }
+  return {
+    ...defaultExtensionSettings(),
+    ...JSON.parse(fs.readFileSync(extensionSettingPath, "utf8")),
   };
 }
