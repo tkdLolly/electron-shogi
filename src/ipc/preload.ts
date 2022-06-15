@@ -127,6 +127,28 @@ const api: Bridge = {
   async usiQuit(sessionID: number): Promise<void> {
     await ipcRenderer.invoke(Background.USI_QUIT, sessionID);
   },
+  async loadExtensionSetting(): Promise<string> {
+    return await ipcRenderer.invoke(Background.LOAD_EXTENSION_SETTING);
+  },
+  async saveExtensionSetting(json: string): Promise<void> {
+    await ipcRenderer.invoke(Background.SAVE_EXTENSION_SETTING, json);
+  },
+  async showSelectExtensionDialog(): Promise<string> {
+    return await ipcRenderer.invoke(Background.SHOW_SELECT_EXTENSION_DIALOG);
+  },
+  async loadExtensionConfigFile(path: string): Promise<string> {
+    return await ipcRenderer.invoke(
+      Background.LOAD_EXTENSION_CONFIG_FILE,
+      path
+    );
+  },
+  async executeExtension(path: string, variables: string): Promise<number> {
+    return await ipcRenderer.invoke(
+      Background.EXECUTE_EXTENSION,
+      path,
+      variables
+    );
+  },
   log(level: LogLevel, message: string): void {
     ipcRenderer.invoke(Background.LOG, level, message);
   },
@@ -184,6 +206,21 @@ const api: Bridge = {
         callback(sessionID, usi, sender, name, json);
       }
     );
+  },
+  onExtensionMessage(
+    callback: (sessionID: number, instruction: string) => void
+  ): void {
+    ipcRenderer.on(
+      Renderer.EXTENSION_MESSAGE,
+      (_, sessionID: number, instruction: string) => {
+        callback(sessionID, instruction);
+      }
+    );
+  },
+  onExtensionQuit(callback: (sessionID: number) => void): void {
+    ipcRenderer.on(Renderer.EXTENSION_QUIT, (_, sessionID: number) => {
+      callback(sessionID);
+    });
   },
 };
 

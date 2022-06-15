@@ -1,0 +1,6 @@
+{
+  "name": "Hello World Sample",
+  "command": "node",
+  "arguments": ["helloworld.mjs"],
+  "workingDirectory": "."
+}

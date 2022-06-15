@@ -9,6 +9,9 @@ import { AppState } from "@/store/state";
 import { GameResult } from "@/players/player";
 import { AnalysisSetting } from "@/settings/analysis";
 import { LogLevel } from "./log";
+import { ExtensionSettings } from "@/settings/extension";
+import { ExtensionConfig } from "@/extension/config";
+import { Variable } from "@/extension/variable";
 
 export interface Bridge {
   getRecordPathFromProcArg(): Promise<string>;
@@ -51,6 +54,11 @@ export interface Bridge {
   usiStop(sessionID: number): Promise<void>;
   usiGameover(sessionID: number, result: GameResult): Promise<void>;
   usiQuit(sessionID: number): Promise<void>;
+  loadExtensionSetting(): Promise<string>;
+  saveExtensionSetting(setting: string): Promise<void>;
+  showSelectExtensionDialog(): Promise<string>;
+  loadExtensionConfigFile(path: string): Promise<string>;
+  executeExtension(path: string, variables: string): Promise<number>;
   log(level: LogLevel, message: string): void;
   onSendError(callback: (e: Error) => void): void;
   onMenuEvent(callback: (event: MenuEvent) => void): void;
@@ -80,6 +88,10 @@ export interface Bridge {
       json: string
     ) => void
   ): void;
+  onExtensionMessage(
+    callback: (sessionID: number, message: string) => void
+  ): void;
+  onExtensionQuit(callback: (sessionID: number) => void): void;
 }
 
 export interface API {
@@ -123,6 +135,11 @@ export interface API {
   usiStop(sessionID: number): Promise<void>;
   usiGameover(sessionID: number, result: GameResult): Promise<void>;
   usiQuit(sessionID: number): Promise<void>;
+  loadExtensionSetting(): Promise<ExtensionSettings>;
+  saveExtensionSetting(setting: ExtensionSettings): Promise<void>;
+  showSelectExtensionDialog(): Promise<string>;
+  loadExtensionConfigFile(path: string): Promise<ExtensionConfig>;
+  executeExtension(path: string, variables: Variable[]): Promise<number>;
   log(level: LogLevel, message: string): void;
 }
 
@@ -203,6 +220,18 @@ const api: API = {
       blackTimeMs,
       whiteTimeMs
     );
+  },
+  async loadExtensionSetting(): Promise<ExtensionSettings> {
+    return JSON.parse(await bridge.loadExtensionSetting());
+  },
+  saveExtensionSetting(setting: ExtensionSettings): Promise<void> {
+    return bridge.saveExtensionSetting(JSON.stringify(setting));
+  },
+  async loadExtensionConfigFile(path: string): Promise<ExtensionConfig> {
+    return JSON.parse(await bridge.loadExtensionConfigFile(path));
+  },
+  async executeExtension(path: string, variables: Variable[]): Promise<number> {
+    return await bridge.executeExtension(path, JSON.stringify(variables));
   },
 };
 

@@ -7,6 +7,7 @@ import { bridge } from "./api";
 import { MenuEvent } from "./menu";
 import { USIInfoSender } from "@/store/usi";
 import { AppState } from "@/store/state";
+import { onExtensionInstruction } from "@/extension/expt";
 
 export function setup(): void {
   const store = useStore();
@@ -188,6 +189,12 @@ export function setup(): void {
       store.updateUSIPonderInfo(sessionID, usi, sender, name, JSON.parse(json));
     }
   );
+  bridge.onExtensionMessage((sessionID: number, instruction: string) => {
+    onExtensionInstruction(JSON.parse(instruction.replaceAll("'", '"')));
+  });
+  bridge.onExtensionQuit((sessionID: number) => {
+    store.onQuitExtension(sessionID);
+  });
   watch(
     () => [store.appState, store.isBussy],
     ([appState, bussy]) => {
