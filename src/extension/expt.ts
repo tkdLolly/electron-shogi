@@ -19,10 +19,9 @@ export function onExtensionInstruction(command: Command) {
     case "displayMessageBox":
       useStore().enqueueMessage(command.value);
       break;
-    default:
-      useStore().enqueueMessage(command.comment);
-      useStore().enqueueMessage(command.kif_data.join("\n---\n"));
-      useStore().enqueueMessage(command.kif_info.join("\n---\n"));
+    default: {
+      useStore().setSearchKifDBResult(command);
       break;
+    }
   }
 }

@@ -20,10 +20,7 @@
       </div>
       <button class="dialog-wide-button" @click="add()">追加</button>
       <div class="dialog-main-buttons">
-        <button class="dialog-button" @click="saveAndClose()">
-          保存して閉じる
-        </button>
-        <button class="dialog-button" @click="cancel()">キャンセル</button>
+        <button class="dialog-button" @click="close()">閉じる</button>
       </div>
     </dialog>
   </div>
@@ -63,8 +60,22 @@ export default defineComponent({
       store.executeExtension(setting.value.extensions[uri]);
     };
 
-    const remove = (uri: string) => {
-      delete setting.value.extensions[uri];
+    const remove = async (uri: string) => {
+      store.retainBussyState();
+      const newSetting = {
+        extensions: {
+          ...setting.value.extensions,
+        },
+      };
+      delete newSetting.extensions[uri];
+      try {
+        await api.saveExtensionSetting(newSetting);
+        setting.value = newSetting;
+      } catch (e) {
+        store.pushError(e);
+      } finally {
+        store.releaseBussyState();
+      }
     };
 
     const add = async () => {
@@ -76,11 +87,18 @@ export default defineComponent({
         }
         const config = await api.loadExtensionConfigFile(path);
         const uri = issueExtensionURI();
-        setting.value.extensions[uri] = {
-          uri: uri,
-          name: config.name,
-          configPath: path,
+        const newSetting = {
+          extensions: {
+            ...setting.value.extensions,
+            [uri]: {
+              uri: uri,
+              name: config.name,
+              configPath: path,
+            },
+          },
         };
+        await api.saveExtensionSetting(newSetting);
+        setting.value = newSetting;
       } catch (e) {
         store.pushError(e);
       } finally {
@@ -88,19 +106,7 @@ export default defineComponent({
       }
     };
 
-    const saveAndClose = async () => {
-      store.retainBussyState();
-      try {
-        await api.saveExtensionSetting(setting.value);
-        store.closeDialog();
-      } catch (e) {
-        store.pushError(e);
-      } finally {
-        store.releaseBussyState();
-      }
-    };
-
-    const cancel = () => {
+    const close = () => {
       store.closeDialog();
     };
 
@@ -114,8 +120,7 @@ export default defineComponent({
       execute,
       remove,
       add,
-      saveAndClose,
-      cancel,
+      close,
     };
   },
 });

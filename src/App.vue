@@ -7,6 +7,7 @@
   <ExtensionDialog v-if="dialogVisibilities.extension" />
   <AppSettingDialog v-if="dialogVisibilities.appSetting" />
   <PasteDialog v-if="dialogVisibilities.paste" />
+  <SearchKifDBResult v-if="dialogVisibilities.searchKifDB" />
   <BussyMessage v-if="dialogVisibilities.bussy" />
   <ConfirmDialog v-if="dialogVisibilities.confirm" />
   <InfoMessage v-if="hasMessage" />
@@ -20,6 +21,7 @@ import GameDialog from "@/components/dialog/GameDialog.vue";
 import ResearchDialog from "@/components/dialog/ResearchDialog.vue";
 import USIEngineManagementDialog from "@/components/dialog/USIEngineManagementDialog.vue";
 import ExtensionDialog from "@/components/dialog/ExtensionDialog.vue";
+import SearchKifDBResult from "@/components/dialog/SearchKifDBResult.vue";
 import AppSettingDialog from "@/components/dialog/AppSettingDialog.vue";
 import PasteDialog from "@/components/dialog/PasteDialog.vue";
 import BussyMessage from "@/components/dialog/BussyMessage.vue";
@@ -39,6 +41,7 @@ export default defineComponent({
     ResearchDialog,
     USIEngineManagementDialog,
     ExtensionDialog,
+    SearchKifDBResult,
     AppSettingDialog,
     PasteDialog,
     BussyMessage,
@@ -59,6 +62,7 @@ export default defineComponent({
         extension: store.appState === AppState.EXTENSION_DIALOG,
         appSetting: store.displayAppSetting,
         paste: store.appState === AppState.PASTE_DIALOG,
+        searchKifDB: !!store.searchKifDBResult,
         bussy: store.isBussy,
         confirm: store.confirmation !== undefined,
       };

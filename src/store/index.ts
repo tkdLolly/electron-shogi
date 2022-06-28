@@ -60,9 +60,16 @@ import { toString } from "@/helpers/string";
 import { ExtensionSetting } from "@/settings/extension";
 import { buildExtension, Extension } from "@/extension";
 
+type SearchKifDBResult = {
+  comment: string;
+  kif_data: string[];
+  kif_info: string[];
+};
+
 class Store {
   private _bussy: BussyStore;
   private _message: MessageStore;
+  private _skdb?: SearchKifDBResult;
   private _error: ErrorStore;
   private _appSetting: AppSetting;
   private _appState: AppState;
@@ -116,6 +123,18 @@ class Store {
 
   dequeueMessage(): void {
     this._message.dequeue();
+  }
+
+  get searchKifDBResult(): SearchKifDBResult | undefined {
+    return this._skdb;
+  }
+
+  setSearchKifDBResult(skdb: SearchKifDBResult): void {
+    this._skdb = skdb;
+  }
+
+  clearSearchKifDBResult(): void {
+    this._skdb = undefined;
   }
 
   get errors(): Error[] {
