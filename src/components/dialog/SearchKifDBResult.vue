@@ -4,12 +4,10 @@
       <div class="content">
         <div class="list">
           <div v-for="entry of list" :key="entry.index" class="element">
-            <button v-if="entry.usi">
+            <button v-if="entry.usi" @click="showPreview(entry)">
               <ButtonIcon
                 class="icon"
-                :icon="Icon.PLAY"
-                @click="showPreview(entry)"
-              />
+                :icon="Icon.PLAY" />
               再現
             </button>
             <div>
@@ -62,6 +60,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const dialog: Ref = ref(null);
+    const preview = ref<Preview | null>(null);
 
     onMounted(() => {
       showModalDialog(dialog.value);
@@ -94,8 +93,8 @@ export default defineComponent({
       store.clearSearchKifDBResult();
     };
 
-    const preview = ref<Preview | null>(null);
     const showPreview = (entry: Entry) => {
+      console.log("showPreview");
       preview.value = {
         position: entry.position as string,
         pv: (entry.usi as string).split(" "),
@@ -109,8 +108,8 @@ export default defineComponent({
     return {
       Icon,
       dialog,
-      list,
       preview,
+      list,
       onClose,
       showPreview,
       closePreview,
