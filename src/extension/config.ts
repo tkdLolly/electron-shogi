@@ -5,7 +5,7 @@ export type ExtensionConfig = {
   command: string;
   arguments?: string[];
   workingDirectory?: string;
-  encoding?: string;
+  encoding?: string; // FIXME: できればなくしたい。
 };
 
 export function listVariableNamesFromArguments(

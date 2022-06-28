@@ -1,16 +1,28 @@
 import { useStore } from "@/store";
 
-type Command = DisplayMessageBoxCommand;
+type Command = DisplayMessageBoxCommand | SearchKifDB;
 
 type DisplayMessageBoxCommand = {
   type: "displayMessageBox";
   value: string;
 };
 
+type SearchKifDB = {
+  type: undefined;
+  comment: string;
+  kif_data: string[];
+  kif_info: string[];
+};
+
 export function onExtensionInstruction(command: Command) {
   switch (command.type) {
     case "displayMessageBox":
       useStore().enqueueMessage(command.value);
+      break;
+    default:
+      useStore().enqueueMessage(command.comment);
+      useStore().enqueueMessage(command.kif_data.join("\n---\n"));
+      useStore().enqueueMessage(command.kif_info.join("\n---\n"));
       break;
   }
 }

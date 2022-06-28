@@ -3,7 +3,11 @@
     <dialog ref="dialog">
       <div class="content">
         <ButtonIcon class="icon" :icon="Icon.INFO" />
-        <div class="message">{{ message }}</div>
+        <div class="message">
+          <div v-for="line of lines" :key="line.index" class="message-line">
+            {{ line.text }}
+          </div>
+        </div>
       </div>
       <div class="dialog-main-buttons">
         <button @click="onClose()">閉じる</button>
@@ -32,7 +36,14 @@ export default defineComponent({
       showModalDialog(dialog.value);
     });
 
-    const message = computed(() => store.message);
+    const lines = computed(() => {
+      return store.message.split("\n").map((text, index) => {
+        return {
+          index,
+          text,
+        };
+      });
+    });
 
     const onClose = () => {
       store.dequeueMessage();
@@ -40,10 +51,16 @@ export default defineComponent({
 
     return {
       dialog,
-      message,
+      lines,
       onClose,
       Icon,
     };
   },
 });
 </script>
+
+<style scoped>
+.message-line {
+  text-align: left;
+}
+</style>
