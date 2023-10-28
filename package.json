@@ -15,13 +15,13 @@
     "lint": "eslint --fix --max-warnings 0 -c .eslintrc.js ./src && prettier --write ./src/**/*.{ts,tsx}",
     "electron:compile": "tsc && tsc-alias && webpack",
     "electron:compile-all": "npm run compile && npm run electron:compile",
-    "electron:serve": "npm run electron:compile && concurrently --kill-others vite \"electron .\" \"tsc --sourceMap -w\" \"tsc-alias -w\"",
+    "electron:serve": "electron-vite dev",
     "electron:build": "npm run electron:compile-all && node scripts/build.mjs",
     "electron:portable": "npm run electron:compile-all && node scripts/build.mjs portable",
     "electron:preview": "npm run electron:compile-all && electron .",
     "report:license": "node scripts/report-license.mjs"
   },
-  "main": "dist/src/background/index.js",
+  "main": "./out/main/index.js",
   "dependencies": {
     "@github/hotkey": "^2.0.1",
     "async-lock": "^1.4.0",

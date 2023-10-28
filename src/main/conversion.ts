@@ -12,7 +12,7 @@ import {
 } from "@/common/settings/conversion";
 import { promises as fs } from "fs";
 import path from "path";
-import { getAppLogger } from "@/background/log";
+import { getAppLogger } from "@/main/log";
 import { AppSetting, TextDecodingRule } from "@/common/settings/app";
 import { exists, listFiles } from "./helpers/file";
 import { loadAppSetting } from "./settings";

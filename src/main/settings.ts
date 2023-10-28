@@ -19,7 +19,7 @@ import {
   defaultAnalysisSetting,
   normalizeAnalysisSetting,
 } from "@/common/settings/analysis";
-import { getAppLogger } from "@/background/log";
+import { getAppLogger } from "@/main/log";
 import {
   CSAGameSettingHistory,
   decryptCSAGameSettingHistory,

@@ -9,11 +9,11 @@ import {
   onUSIInfo,
   onUSINoMate,
   onUSIPonderInfo,
-} from "@/background/ipc";
+} from "@/main/ipc";
 import { TimeLimitSetting } from "@/common/settings/game";
 import { GameResult } from "@/common/player";
 import { t } from "@/common/i18n";
-import { resolvePath } from "@/background/path";
+import { resolvePath } from "@/main/path";
 import { getUSILogger } from "../log";
 
 function newTimeoutError(timeoutSeconds: number): Error {

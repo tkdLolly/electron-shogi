@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as log4js from "log4js";
-import { EngineProcess, GameResult } from "@/background/usi/engine";
-import { ChildProcess } from "@/background/usi/process";
+import { EngineProcess, GameResult } from "@/main/usi/engine";
+import { ChildProcess } from "@/main/usi/process";
 
-jest.mock("@/background/usi/process");
+jest.mock("@/main/usi/process");
 
 const mockChildProcess = ChildProcess as jest.MockedClass<typeof ChildProcess>;
 

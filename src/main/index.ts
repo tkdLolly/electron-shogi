@@ -10,11 +10,11 @@ import {
   sendError,
   setInitialFilePath,
   setup,
-} from "@/background/ipc";
-import { loadAppSettingOnce, loadWindowSetting, saveWindowSetting } from "@/background/settings";
+} from "@/main/ipc";
+import { loadAppSettingOnce, loadWindowSetting, saveWindowSetting } from "@/main/settings";
 import { buildWindowSetting } from "@/common/settings/window";
-import { getAppLogger, shutdownLoggers } from "@/background/log";
-import { quitAll as usiQuitAll } from "@/background/usi";
+import { getAppLogger, shutdownLoggers } from "@/main/log";
+import { quitAll as usiQuitAll } from "@/main/usi";
 import { AppState } from "@/common/control/state";
 import { validateHTTPRequest } from "./security";
 import {
@@ -24,7 +24,7 @@ import {
   isPreview,
   isProduction,
   isTest,
-} from "@/background/environment";
+} from "@/main/environment";
 import { setLanguage, t } from "@/common/i18n";
 
 getAppLogger().info("start main process");
@@ -45,15 +45,13 @@ function createWindow() {
 
   getAppLogger().info("create BrowserWindow");
 
-  const preloadPath = isProduction() ? "./preload.js" : "../../packed/preload.js";
-
   // Create the browser window.
   const win = new BrowserWindow({
     width: setting.width,
     height: setting.height,
     fullscreen: setting.fullscreen,
     webPreferences: {
-      preload: path.join(__dirname, preloadPath),
+      preload: path.join(__dirname, "../preload/index.js"),
       // on development, disable webSecurity to allow mix of "file://" and "http://localhost:5173"
       webSecurity: !isDevelopment(),
     },
@@ -85,8 +83,9 @@ function createWindow() {
   if (isDevelopment() || isTest()) {
     // Development
     getAppLogger().info("load dev server URL");
+    const url = process.env["ELECTRON_RENDERER_URL"] || "http://localhost:5173";
     win
-      .loadURL("http://localhost:5173")
+      .loadURL(url)
       .then(() => {
         if (!process.env.IS_TEST) {
           win.webContents.openDevTools();

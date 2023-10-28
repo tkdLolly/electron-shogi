@@ -1,7 +1,7 @@
 import path from "path";
 import { shell } from "electron";
 import log4js from "log4js";
-import { loadAppSettingOnce } from "@/background/settings";
+import { loadAppSettingOnce } from "@/main/settings";
 import { getDateTimeString } from "@/common/helpers/datetime";
 import { getAppPath, isTest } from "./environment";
 import { AppSetting } from "@/common/settings/app";

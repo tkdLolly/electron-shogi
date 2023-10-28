@@ -1,4 +1,4 @@
-import { convertRecordFiles } from "@/background/conversion";
+import { convertRecordFiles } from "@/main/conversion";
 import { RecordFileFormat } from "@/common/file";
 import {
   DestinationType,
@@ -7,10 +7,10 @@ import {
 } from "@/common/settings/conversion";
 import fs from "fs";
 import path from "path";
-import { listFiles } from "@/background/helpers/file";
+import { listFiles } from "@/main/helpers/file";
 import { defaultAppSetting } from "@/common/settings/app";
-import { saveAppSetting } from "@/background/settings";
-import { getTempPathForTesting } from "@/background/environment";
+import { saveAppSetting } from "@/main/settings";
+import { getTempPathForTesting } from "@/main/environment";
 
 const tmpdir = path.join(getTempPathForTesting(), "conversion");
 

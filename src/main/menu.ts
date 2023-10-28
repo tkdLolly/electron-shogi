@@ -1,8 +1,8 @@
 import path from "path";
 import { app, Menu, MenuItem, MenuItemConstructorOptions, shell } from "electron";
-import { openAutoSaveDirectory, openSettingsDirectory } from "@/background/settings";
-import { openLogsDirectory } from "@/background/log";
-import { getWebContents, onMenuEvent } from "@/background/ipc";
+import { openAutoSaveDirectory, openSettingsDirectory } from "@/main/settings";
+import { openLogsDirectory } from "@/main/log";
+import { getWebContents, onMenuEvent } from "@/main/ipc";
 import { MenuEvent } from "@/common/control/menu";
 import { AppState } from "@/common/control/state";
 import { checkLatestVersion, openHowToUse, openWebSite } from "./help";

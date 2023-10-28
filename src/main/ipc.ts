@@ -20,9 +20,9 @@ import {
   saveMateSearchSetting,
   saveResearchSetting,
   saveUSIEngineSetting,
-} from "@/background/settings";
+} from "@/main/settings";
 import { USIEngineSetting, USIEngineSettings } from "@/common/settings/usi";
-import { setupMenu, updateAppState } from "@/background/menu";
+import { setupMenu, updateAppState } from "@/main/menu";
 import { MenuEvent } from "@/common/control/menu";
 import { USIInfoCommand } from "@/common/usi";
 import { AppState } from "@/common/control/state";
@@ -39,7 +39,7 @@ import {
   setupPlayer as usiSetupPlayer,
   ready as usiReady,
   stop as usiStop,
-} from "@/background/usi";
+} from "@/main/usi";
 import { GameResult } from "@/common/player";
 import { LogLevel, LogType } from "@/common/log";
 import { getAppLogger, openLogFile } from "./log";

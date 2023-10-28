@@ -7,9 +7,9 @@ import {
   onCSAReject,
   onCSAStart,
   sendError,
-} from "@/background/ipc";
-import { getCSALogger } from "@/background/log";
-import { Client } from "@/background/csa/client";
+} from "@/main/ipc";
+import { getCSALogger } from "@/main/log";
+import { Client } from "@/main/csa/client";
 
 let lastSessionID = 0;
 

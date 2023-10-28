@@ -1,8 +1,8 @@
 import path from "path";
 import process from "process";
 import url from "url";
-import { cropPieceImage } from "@/background/image/cropper";
-import { listFiles } from "@/background/helpers/file";
+import { cropPieceImage } from "@/main/image/cropper";
+import { listFiles } from "@/main/helpers/file";
 
 describe("cropper", () => {
   it("cropPieceImage", async () => {
