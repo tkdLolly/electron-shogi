@@ -28,12 +28,15 @@ module.exports = [
     name: "background",
     mode: "production",
     entry: "./dist/src/background/index.js",
-    target: "node",
+    target: "electron-main",
     output: {
       filename: "background.js",
       path: __dirname + "/dist/packed",
     },
     externals: ["electron"],
+    experiments: {
+      outputModule: true,
+    },
     optimization,
     module: {
       rules,
@@ -43,10 +46,10 @@ module.exports = [
     name: "preload",
     mode: "production",
     entry: "./dist/src/renderer/ipc/preload.js",
+    target: "electron-preload",
     output: {
       filename: "preload.js",
       path: __dirname + "/dist/packed",
-      libraryTarget: "commonjs",
     },
     externals: ["electron"],
     optimization,
