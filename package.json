@@ -5,6 +5,7 @@
   "author": "Kubo Ryosuke",
   "license": "MIT",
   "private": true,
+  "type": "module",
   "scripts": {
     "compile": "vite build",
     "serve": "vite",
@@ -26,6 +27,7 @@
     "release": "ts-node scripts/publish-release.ts && npm run docs"
   },
   "main": "dist/src/background/index.js",
+  "module": "dist/src/background/index.js",
   "dependencies": {
     "@github/hotkey": "^2.0.1",
     "async-lock": "^1.4.0",

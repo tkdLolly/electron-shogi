@@ -14,6 +14,15 @@ const optimization = {
   ],
 };
 
+const rules = [
+  {
+    test: /\.m?js$/,
+    resolve: {
+      fullySpecified: false,
+    },
+  },
+];
+
 module.exports = [
   {
     name: "background",
@@ -23,10 +32,12 @@ module.exports = [
     output: {
       filename: "background.js",
       path: __dirname + "/dist/packed",
-      libraryTarget: "commonjs2",
     },
     externals: ["electron"],
     optimization,
+    module: {
+      rules,
+    },
   },
   {
     name: "preload",
@@ -39,5 +50,8 @@ module.exports = [
     },
     externals: ["electron"],
     optimization,
+    module: {
+      rules,
+    },
   },
 ];
