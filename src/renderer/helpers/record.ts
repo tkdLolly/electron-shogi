@@ -18,7 +18,7 @@ export function detectUnsupportedRecordProperties(
     bookmark: false,
     time: false,
   };
-  if (fileType === RecordFileFormat.KIF || fileType === RecordFileFormat.KIFU) {
+  if (fileType === ".kif" || fileType === ".kifu") {
     return props;
   }
   record.forEach((node) => {
@@ -36,19 +36,19 @@ export function detectUnsupportedRecordProperties(
     }
   });
   switch (fileType) {
-    case RecordFileFormat.KI2:
-    case RecordFileFormat.KI2U:
+    case ".ki2":
+    case ".ki2u":
       props.branch = false;
       props.comment = false;
       props.bookmark = false;
       break;
-    case RecordFileFormat.CSA:
+    case ".csa":
       props.comment = false;
       props.time = false;
       break;
-    case RecordFileFormat.SFEN:
+    case ".sfen":
       break;
-    case RecordFileFormat.JKF:
+    case ".jkf":
       props.branch = false;
       props.comment = false;
       props.time = false;

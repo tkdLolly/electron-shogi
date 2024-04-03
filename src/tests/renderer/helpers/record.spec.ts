@@ -1,47 +1,46 @@
-import { RecordFileFormat } from "@/common/file/record";
 import { Record, SpecialMoveType } from "electron-shogi-core";
 import { detectUnsupportedRecordProperties } from "@/renderer/helpers/record";
 
 describe("helpers/record", () => {
   it("detectUnsupportedRecordProperties", () => {
     const record = new Record();
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.KIF)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".kif")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: false,
       time: false,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.KIFU)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".kifu")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: false,
       time: false,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.KI2)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".ki2")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: false,
       time: false,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.KI2U)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".ki2u")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: false,
       time: false,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.CSA)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".csa")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: false,
       time: false,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.SFEN)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".sfen")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: false,
       time: false,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.JKF)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".jkf")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: false,
@@ -53,43 +52,43 @@ describe("helpers/record", () => {
     record.first.comment = "foo";
     record.first.bookmark = "bar";
     record.current.setElapsedMs(123);
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.KIF)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".kif")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: false,
       time: false,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.KIFU)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".kifu")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: false,
       time: false,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.KI2)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".ki2")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: false,
       time: true,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.KI2U)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".ki2u")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: false,
       time: true,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.CSA)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".csa")).toStrictEqual({
       branch: true,
       comment: false,
       bookmark: true,
       time: false,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.SFEN)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".sfen")).toStrictEqual({
       branch: true,
       comment: true,
       bookmark: true,
       time: true,
     });
-    expect(detectUnsupportedRecordProperties(record, RecordFileFormat.JKF)).toStrictEqual({
+    expect(detectUnsupportedRecordProperties(record, ".jkf")).toStrictEqual({
       branch: false,
       comment: false,
       bookmark: true,

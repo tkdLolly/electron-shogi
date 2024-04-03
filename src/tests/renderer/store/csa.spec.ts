@@ -1,6 +1,5 @@
 import api, { API } from "@/renderer/ipc/api";
 import { CSAGameResult, CSASpecialMove } from "@/common/game/csa";
-import { CSAProtocolVersion } from "@/common/settings/csa";
 import {
   Color,
   InitialPositionSFEN,
@@ -788,7 +787,7 @@ P-
 
     it("standard", () => {
       const manager = new CSAGameManager(recordManager, new Clock(), new Clock());
-      manager["_setting"].server.protocolVersion = CSAProtocolVersion.V121;
+      manager["_setting"].server.protocolVersion = "v121";
       manager["onPlayerMove"](move, info);
       expect(mockAPI.csaMove).toBeCalledTimes(1);
       expect(mockAPI.csaMove).toBeCalledWith(0, "+7776FU", undefined, undefined);
@@ -796,7 +795,7 @@ P-
 
     it("floodgate", () => {
       const manager = new CSAGameManager(recordManager, new Clock(), new Clock());
-      manager["_setting"].server.protocolVersion = CSAProtocolVersion.V121_FLOODGATE;
+      manager["_setting"].server.protocolVersion = "v121_floodgate";
       manager["onPlayerMove"](move, info);
       expect(mockAPI.csaMove).toBeCalledTimes(1);
       expect(mockAPI.csaMove).toBeCalledWith(0, "+7776FU", 159, "-3334FU +2726FU -2288UM");

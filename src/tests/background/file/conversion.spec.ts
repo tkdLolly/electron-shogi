@@ -18,16 +18,10 @@ describe("conversion", () => {
   it("separately", async () => {
     const testCases = [
       {
-        sourceFormats: [
-          RecordFileFormat.KIF,
-          RecordFileFormat.KIFU,
-          RecordFileFormat.KI2,
-          RecordFileFormat.KI2U,
-          RecordFileFormat.CSA,
-        ],
+        sourceFormats: [".kif", ".kifu", ".ki2", ".ki2u", ".csa"] as RecordFileFormat[],
         subdirectories: true,
         destination: "all-to-csa/with-subdir",
-        destinationFormat: RecordFileFormat.CSA,
+        destinationFormat: ".csa" as RecordFileFormat,
         createSubdirectories: true,
         fileNameConflictAction: FileNameConflictAction.OVERWRITE,
         expectedReport: {
@@ -56,16 +50,10 @@ describe("conversion", () => {
         ],
       },
       {
-        sourceFormats: [
-          RecordFileFormat.KIF,
-          RecordFileFormat.KIFU,
-          RecordFileFormat.KI2,
-          RecordFileFormat.KI2U,
-          RecordFileFormat.CSA,
-        ],
+        sourceFormats: [".kif", ".kifu", ".ki2", ".ki2u", ".csa"] as RecordFileFormat[],
         subdirectories: false,
         destination: "all-to-csa/without-subdir",
-        destinationFormat: RecordFileFormat.CSA,
+        destinationFormat: ".csa" as RecordFileFormat,
         createSubdirectories: true,
         fileNameConflictAction: FileNameConflictAction.OVERWRITE,
         expectedReport: {
@@ -91,16 +79,10 @@ describe("conversion", () => {
         ],
       },
       {
-        sourceFormats: [
-          RecordFileFormat.KIF,
-          RecordFileFormat.KIFU,
-          RecordFileFormat.KI2,
-          RecordFileFormat.KI2U,
-          RecordFileFormat.CSA,
-        ],
+        sourceFormats: [".kif", ".kifu", ".ki2", ".ki2u", ".csa"] as RecordFileFormat[],
         subdirectories: true,
         destination: "all-to-csa/not-create-subdir",
-        destinationFormat: RecordFileFormat.CSA,
+        destinationFormat: ".csa" as RecordFileFormat,
         createSubdirectories: false,
         fileNameConflictAction: FileNameConflictAction.NUMBER_SUFFIX,
         expectedReport: {
@@ -129,10 +111,10 @@ describe("conversion", () => {
         ],
       },
       {
-        sourceFormats: [RecordFileFormat.CSA],
+        sourceFormats: [".csa"] as RecordFileFormat[],
         subdirectories: false,
         destination: "csa-to-ki2",
-        destinationFormat: RecordFileFormat.KI2,
+        destinationFormat: ".ki2" as RecordFileFormat,
         createSubdirectories: true,
         fileNameConflictAction: FileNameConflictAction.OVERWRITE,
         expectedReport: {
@@ -146,10 +128,10 @@ describe("conversion", () => {
         expectedFiles: ["csa-sjis.ki2"],
       },
       {
-        sourceFormats: [RecordFileFormat.KI2U],
+        sourceFormats: [".ki2u"] as RecordFileFormat[],
         subdirectories: false,
         destination: "ki2u-to-kifu/overwrite",
-        destinationFormat: RecordFileFormat.KIFU,
+        destinationFormat: ".kifu" as RecordFileFormat,
         createSubdirectories: true,
         fileNameConflictAction: FileNameConflictAction.OVERWRITE,
         repeat: 2,
@@ -164,10 +146,10 @@ describe("conversion", () => {
         expectedFiles: ["ki2u-utf8.kifu"],
       },
       {
-        sourceFormats: [RecordFileFormat.KI2U],
+        sourceFormats: [".ki2u"] as RecordFileFormat[],
         subdirectories: false,
         destination: "ki2u-to-kifu/number-suffix",
-        destinationFormat: RecordFileFormat.KIFU,
+        destinationFormat: ".kifu" as RecordFileFormat,
         createSubdirectories: true,
         fileNameConflictAction: FileNameConflictAction.NUMBER_SUFFIX,
         repeat: 2,
@@ -182,10 +164,10 @@ describe("conversion", () => {
         expectedFiles: ["ki2u-utf8-2.kifu", "ki2u-utf8-3.kifu", "ki2u-utf8.kifu"],
       },
       {
-        sourceFormats: [RecordFileFormat.KI2U],
+        sourceFormats: [".ki2u"] as RecordFileFormat[],
         subdirectories: false,
         destination: "ki2u-to-kifu/skip",
-        destinationFormat: RecordFileFormat.KIFU,
+        destinationFormat: ".kifu" as RecordFileFormat,
         createSubdirectories: true,
         fileNameConflictAction: FileNameConflictAction.SKIP,
         repeat: 1,
@@ -307,13 +289,7 @@ describe("conversion", () => {
       const result = await convertRecordFiles({
         ...defaultBatchConversionSetting(),
         source: "src/tests/testdata/conversion/input",
-        sourceFormats: [
-          RecordFileFormat.KIF,
-          RecordFileFormat.KIFU,
-          RecordFileFormat.KI2,
-          RecordFileFormat.KI2U,
-          RecordFileFormat.CSA,
-        ],
+        sourceFormats: [".kif", ".kifu", ".ki2", ".ki2u", ".csa"] as RecordFileFormat[],
         subdirectories: true,
         destinationType: DestinationType.SINGLE_FILE,
         singleFileDestination: destinationFullPath,

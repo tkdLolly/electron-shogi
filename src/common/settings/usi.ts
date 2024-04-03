@@ -1,6 +1,7 @@
 import { issueEngineURI } from "@/common/uri";
 import * as uri from "@/common/uri";
 import { t } from "@/common/i18n";
+import * as iots from "io-ts";
 
 // reserved option names
 export const USIPonder = "USI_Ponder";
@@ -12,18 +13,31 @@ export const Threads = "Threads";
 export const NumberOfThreads = "NumberOfThreads";
 export const MultiPV = "MultiPV";
 
-export type USIEngineOptionType = "check" | "spin" | "combo" | "button" | "string" | "filename";
+export const USIEngineOptionTypeDef = iots.union([
+  iots.literal("check"),
+  iots.literal("spin"),
+  iots.literal("combo"),
+  iots.literal("button"),
+  iots.literal("string"),
+  iots.literal("filename"),
+]);
+export type USIEngineOptionType = iots.TypeOf<typeof USIEngineOptionTypeDef>;
 
-export type USIEngineOption = {
-  name: string;
-  type: USIEngineOptionType;
-  order: number;
-  default?: string | number;
-  min?: number;
-  max?: number;
-  vars: string[];
-  value?: string | number;
-};
+export const USIEngineOptionDef = iots.intersection([
+  iots.type({
+    name: iots.string,
+    type: USIEngineOptionTypeDef,
+    order: iots.number,
+    vars: iots.array(iots.string),
+  }),
+  iots.partial({
+    default: iots.union([iots.string, iots.number]),
+    min: iots.number,
+    max: iots.number,
+    value: iots.union([iots.string, iots.number]),
+  }),
+]);
+export type USIEngineOption = iots.TypeOf<typeof USIEngineOptionDef>;
 
 export function getUSIEngineOptionCurrentValue(
   option: USIEngineOption | null | undefined,
@@ -51,22 +65,28 @@ export enum USIEngineLabel {
   MATE = "mate",
 }
 
-export type USIEngineLabels = {
-  [USIEngineLabel.GAME]?: boolean;
-  [USIEngineLabel.RESEARCH]?: boolean;
-  [USIEngineLabel.MATE]?: boolean;
-};
+export const USIEngineLabelsDef = iots.partial({
+  [USIEngineLabel.GAME]: iots.boolean,
+  [USIEngineLabel.RESEARCH]: iots.boolean,
+  [USIEngineLabel.MATE]: iots.boolean,
+});
+export type USIEngineLabels = iots.TypeOf<typeof USIEngineLabelsDef>;
 
-export type USIEngineSetting = {
-  uri: string;
-  name: string;
-  defaultName: string;
-  author: string;
-  path: string;
-  options: { [name: string]: USIEngineOption };
-  labels?: USIEngineLabels;
-  enableEarlyPonder: boolean;
-};
+export const USIEngineSettingDef = iots.intersection([
+  iots.type({
+    uri: iots.string,
+    name: iots.string,
+    defaultName: iots.string,
+    author: iots.string,
+    path: iots.string,
+    options: iots.record(iots.string, USIEngineOptionDef),
+    enableEarlyPonder: iots.boolean,
+  }),
+  iots.partial({
+    labels: USIEngineLabelsDef,
+  }),
+]);
+export type USIEngineSetting = iots.TypeOf<typeof USIEngineSettingDef>;
 
 export function emptyUSIEngineSetting(): USIEngineSetting {
   return {
@@ -258,17 +278,19 @@ export class USIEngineSettings {
   }
 }
 
-export type USIEngineOptionForCLI = {
-  type: USIEngineOptionType;
-  value: string | number | boolean;
-};
+export const USIEngineOptionForCLIDef = iots.type({
+  type: USIEngineOptionTypeDef,
+  value: iots.union([iots.string, iots.number, iots.boolean]),
+});
+export type USIEngineOptionForCLI = iots.TypeOf<typeof USIEngineOptionForCLIDef>;
 
-export type USIEngineSettingForCLI = {
-  name: string;
-  path: string;
-  options: { [name: string]: USIEngineOptionForCLI };
-  enableEarlyPonder: boolean;
-};
+export const USIEngineSettingForCLIDef = iots.type({
+  name: iots.string,
+  path: iots.string,
+  options: iots.record(iots.string, USIEngineOptionForCLIDef),
+  enableEarlyPonder: iots.boolean,
+});
+export type USIEngineSettingForCLI = iots.TypeOf<typeof USIEngineSettingForCLIDef>;
 
 export function exportUSIEngineSettingForCLI(engine: USIEngineSetting): USIEngineSettingForCLI {
   const options: { [name: string]: USIEngineOptionForCLI } = {};

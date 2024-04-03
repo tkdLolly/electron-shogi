@@ -1,54 +1,71 @@
 import * as uri from "@/common/uri";
-import { PlayerSetting, defaultPlayerSetting, validatePlayerSetting } from "./player";
-import { t } from "@/common/i18n";
 import {
-  USIEngineSettingForCLI,
+  PlayerSetting,
+  PlayerSettingDef,
+  defaultPlayerSetting,
+  validatePlayerSetting,
+} from "./player";
+import { t } from "@/common/i18n";
+import * as iots from "io-ts";
+import {
+  USIEngineSettingForCLIDef,
   exportUSIEngineSettingForCLI,
   importUSIEngineSettingForCLI,
 } from "./usi";
-import { RecordFileFormat } from "@/common/file/record";
+import { RecordFileFormatDef } from "@/common/file/record";
 import { AppSetting } from "./app";
 import { base64Decode, base64Encode } from "encoding-japanese";
+import { isLeft } from "fp-ts/Either";
+import { formatErrors } from "@/common/helpers/iots";
 
-export enum CSAProtocolVersion {
-  V121 = "v121",
-  V121_FLOODGATE = "v121_floodgate",
-  V121_X1 = "v121_x1",
-}
+export const CSAProtocolVersionDef = iots.union([
+  iots.literal("v121"),
+  iots.literal("v121_floodgate"),
+  iots.literal("v121_x1"),
+]);
+export type CSAProtocolVersion = iots.TypeOf<typeof CSAProtocolVersionDef>;
 
-export type TCPKeepaliveSetting = {
-  initialDelay: number;
-};
+export const TCPKeepaliveSettingDef = iots.type({
+  initialDelay: iots.number,
+});
+export type TCPKeepaliveSetting = iots.TypeOf<typeof TCPKeepaliveSettingDef>;
 
-export type BlankLinePingSetting = {
-  initialDelay: number;
-  interval: number;
-};
+export const BlankLinePingSettingDef = iots.type({
+  initialDelay: iots.number,
+  interval: iots.number,
+});
+export type BlankLinePingSetting = iots.TypeOf<typeof BlankLinePingSettingDef>;
 
-export type CSAServerSetting = {
-  protocolVersion: CSAProtocolVersion;
-  host: string;
-  port: number;
-  id: string;
-  password: string;
-  tcpKeepalive: TCPKeepaliveSetting;
-  blankLinePing?: BlankLinePingSetting;
-};
+export const CSAServerSettingDef = iots.intersection([
+  iots.type({
+    protocolVersion: CSAProtocolVersionDef,
+    host: iots.string,
+    port: iots.number,
+    id: iots.string,
+    password: iots.string,
+    tcpKeepalive: TCPKeepaliveSettingDef,
+  }),
+  iots.partial({
+    blankLinePing: BlankLinePingSettingDef,
+  }),
+]);
+export type CSAServerSetting = iots.TypeOf<typeof CSAServerSettingDef>;
 
-export type CSAGameSetting = {
-  player: PlayerSetting;
-  server: CSAServerSetting;
-  autoFlip: boolean;
-  enableComment: boolean;
-  enableAutoSave: boolean;
-  repeat: number;
-  autoRelogin: boolean;
-  restartPlayerEveryGame: boolean;
-};
+export const CSAGameSettingDef = iots.type({
+  player: PlayerSettingDef,
+  server: CSAServerSettingDef,
+  autoFlip: iots.boolean,
+  enableComment: iots.boolean,
+  enableAutoSave: iots.boolean,
+  repeat: iots.number,
+  autoRelogin: iots.boolean,
+  restartPlayerEveryGame: iots.boolean,
+});
+export type CSAGameSetting = iots.TypeOf<typeof CSAGameSettingDef>;
 
 export function defaultCSAServerSetting(): CSAServerSetting {
   return {
-    protocolVersion: CSAProtocolVersion.V121_FLOODGATE,
+    protocolVersion: "v121_floodgate",
     host: "localhost",
     port: 4081,
     id: "",
@@ -77,9 +94,9 @@ export function defaultCSAGameSetting(): CSAGameSetting {
 
 export function validateCSAServerSetting(setting: CSAServerSetting): Error | undefined {
   if (
-    setting.protocolVersion !== CSAProtocolVersion.V121 &&
-    setting.protocolVersion !== CSAProtocolVersion.V121_FLOODGATE &&
-    setting.protocolVersion !== CSAProtocolVersion.V121_X1
+    setting.protocolVersion !== "v121" &&
+    setting.protocolVersion !== "v121_floodgate" &&
+    setting.protocolVersion !== "v121_x1"
   ) {
     return new Error(t.protocolVersionNotSelected);
   }
@@ -122,8 +139,8 @@ export function validateCSAGameSetting(setting: CSAGameSetting): Error | undefin
     return serverError;
   }
   if (
-    setting.server.protocolVersion !== CSAProtocolVersion.V121 &&
-    setting.server.protocolVersion !== CSAProtocolVersion.V121_FLOODGATE
+    setting.server.protocolVersion !== "v121" &&
+    setting.server.protocolVersion !== "v121_floodgate"
   ) {
     return new Error("protocolVersion must be v121 or v121_floodgate");
   }
@@ -229,7 +246,7 @@ export type SecureCSAServerSetting = {
 
 export function emptySecureCSAServerSetting(): SecureCSAServerSetting {
   return {
-    protocolVersion: CSAProtocolVersion.V121_FLOODGATE,
+    protocolVersion: "v121_floodgate",
     host: "",
     port: 0,
     id: "",
@@ -356,17 +373,22 @@ export function decryptCSAGameSettingHistory(
   };
 }
 
-export type CSAGameSettingForCLI = {
-  usi: USIEngineSettingForCLI;
-  server: CSAServerSetting;
-  saveRecordFile: boolean;
-  enableComment: boolean;
-  recordFileNameTemplate?: string;
-  recordFileFormat?: RecordFileFormat;
-  repeat: number;
-  autoRelogin: boolean;
-  restartPlayerEveryGame: boolean;
-};
+export const CSAGameSettingForCLIDef = iots.intersection([
+  iots.type({
+    usi: USIEngineSettingForCLIDef,
+    server: CSAServerSettingDef,
+    saveRecordFile: iots.boolean,
+    enableComment: iots.boolean,
+    repeat: iots.number,
+    autoRelogin: iots.boolean,
+    restartPlayerEveryGame: iots.boolean,
+  }),
+  iots.partial({
+    recordFileNameTemplate: iots.string,
+    recordFileFormat: RecordFileFormatDef,
+  }),
+]);
+export type CSAGameSettingForCLI = iots.TypeOf<typeof CSAGameSettingForCLIDef>;
 
 export function exportCSAGameSettingForCLI(
   setting: CSAGameSetting,
@@ -417,11 +439,14 @@ export async function compressCSAGameSettingForCLI(setting: CSAGameSettingForCLI
   return base64Encode(new Uint8Array(bin));
 }
 
-export async function decompressCSAGameSettingForCLI(
-  compressed: string,
-): Promise<CSAGameSettingForCLI> {
+export async function decompressCSAGameSettingForCLI(compressed: string) {
   const bin = new Uint8Array(base64Decode(compressed));
   const cs = new DecompressionStream("gzip");
   new Blob([bin]).stream().pipeThrough(cs);
-  return JSON.parse(await new Response(cs.readable).text());
+  const text = await new Response(cs.readable).text();
+  const either = CSAGameSettingForCLIDef.decode(JSON.parse(text));
+  if (isLeft(either)) {
+    throw new Error(`Invalid properties: ${formatErrors(either.left)}`);
+  }
+  return either.right;
 }

@@ -126,12 +126,12 @@
           <div class="formats">
             <HorizontalSelector
               :items="[
-                { label: '.kif', value: RecordFileFormat.KIF },
-                { label: '.kifu', value: RecordFileFormat.KIFU },
-                { label: '.ki2', value: RecordFileFormat.KI2 },
-                { label: '.ki2u', value: RecordFileFormat.KI2U },
-                { label: '.csa', value: RecordFileFormat.CSA },
-                { label: '.jkf', value: RecordFileFormat.JKF },
+                { label: '.kif', value: '.kif' },
+                { label: '.kifu', value: '.kifu' },
+                { label: '.ki2', value: '.ki2' },
+                { label: '.ki2u', value: '.ki2u' },
+                { label: '.csa', value: '.csa' },
+                { label: '.jkf', value: '.jkf' },
               ]"
               :value="destinationFormat"
               @change="
@@ -250,7 +250,7 @@ const sourceFormats = ref({
 const subdirectories = ref(false);
 const destinationType = ref(DestinationType.DIRECTORY);
 const destination = ref();
-const destinationFormat = ref(RecordFileFormat.KIF);
+const destinationFormat = ref<RecordFileFormat>(".kif");
 const createSubdirectories = ref(false);
 const fileNameConflictAction = ref(FileNameConflictAction.OVERWRITE);
 const singleFileDestination = ref();
@@ -264,12 +264,12 @@ onMounted(async () => {
     installHotKeyForDialog(dialog.value);
     source.value.value = batchConversionSetting.source;
     sourceFormats.value = {
-      kif: batchConversionSetting.sourceFormats.includes(RecordFileFormat.KIF),
-      kifu: batchConversionSetting.sourceFormats.includes(RecordFileFormat.KIFU),
-      ki2: batchConversionSetting.sourceFormats.includes(RecordFileFormat.KI2),
-      ki2u: batchConversionSetting.sourceFormats.includes(RecordFileFormat.KI2U),
-      csa: batchConversionSetting.sourceFormats.includes(RecordFileFormat.CSA),
-      jkf: batchConversionSetting.sourceFormats.includes(RecordFileFormat.JKF),
+      kif: batchConversionSetting.sourceFormats.includes(".kif"),
+      kifu: batchConversionSetting.sourceFormats.includes(".kifu"),
+      ki2: batchConversionSetting.sourceFormats.includes(".ki2"),
+      ki2u: batchConversionSetting.sourceFormats.includes(".ki2u"),
+      csa: batchConversionSetting.sourceFormats.includes(".csa"),
+      jkf: batchConversionSetting.sourceFormats.includes(".jkf"),
     };
     subdirectories.value = batchConversionSetting.subdirectories;
     destinationType.value = batchConversionSetting.destinationType;
@@ -326,12 +326,12 @@ const convert = async () => {
   const batchConversionSetting: BatchConversionSetting = {
     source: source.value.value,
     sourceFormats: Object.entries({
-      [RecordFileFormat.KIF]: sourceFormats.value.kif,
-      [RecordFileFormat.KIFU]: sourceFormats.value.kifu,
-      [RecordFileFormat.KI2]: sourceFormats.value.ki2,
-      [RecordFileFormat.KI2U]: sourceFormats.value.ki2u,
-      [RecordFileFormat.CSA]: sourceFormats.value.csa,
-      [RecordFileFormat.JKF]: sourceFormats.value.jkf,
+      [".kif"]: sourceFormats.value.kif,
+      [".kifu"]: sourceFormats.value.kifu,
+      [".ki2"]: sourceFormats.value.ki2,
+      [".ki2u"]: sourceFormats.value.ki2u,
+      [".csa"]: sourceFormats.value.csa,
+      [".jkf"]: sourceFormats.value.jkf,
     })
       .filter(([, value]) => value)
       .map(([key]) => key as RecordFileFormat),

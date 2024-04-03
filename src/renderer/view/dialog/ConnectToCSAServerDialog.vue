@@ -66,7 +66,7 @@
 <script setup lang="ts">
 import { PromptTarget } from "@/common/advanced/prompt";
 import { t } from "@/common/i18n";
-import { CSAProtocolVersion, validateCSAServerSetting } from "@/common/settings/csa";
+import { CSAServerSetting, validateCSAServerSetting } from "@/common/settings/csa";
 import { installHotKeyForDialog, uninstallHotKeyForDialog } from "@/renderer/devices/hotkey";
 import { showModalDialog } from "@/renderer/helpers/dialog";
 import api from "@/renderer/ipc/api";
@@ -98,7 +98,7 @@ const onTogglePasswordVisibility = (value: boolean) => {
 
 const onStart = () => {
   const setting = {
-    protocolVersion: CSAProtocolVersion.V121_X1,
+    protocolVersion: "v121_x1",
     host: host.value.value,
     port: port.value.value,
     id: id.value.value,
@@ -106,7 +106,7 @@ const onStart = () => {
     tcpKeepalive: {
       initialDelay: 60,
     },
-  };
+  } as CSAServerSetting;
   const error = validateCSAServerSetting(setting);
   if (error) {
     store.pushError(error);

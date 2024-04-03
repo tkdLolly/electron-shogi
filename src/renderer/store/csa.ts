@@ -8,7 +8,7 @@ import {
 } from "@/common/game/csa";
 import { defaultPlayerBuilder, PlayerBuilder } from "@/renderer/players/builder";
 import { Player, SearchInfo } from "@/renderer/players/player";
-import { CSAGameSetting, CSAProtocolVersion, defaultCSAGameSetting } from "@/common/settings/csa";
+import { CSAGameSetting, defaultCSAGameSetting } from "@/common/settings/csa";
 import {
   Color,
   RecordFormatType,
@@ -590,10 +590,10 @@ export class CSAGameManager {
     let score: number | undefined = undefined;
     let pv: string | undefined = undefined;
     switch (this._setting.server.protocolVersion) {
-      case CSAProtocolVersion.V121:
+      case "v121":
         // 通常の CSA プロトコルでは次の指し手のみを送信する。
         break;
-      case CSAProtocolVersion.V121_FLOODGATE:
+      case "v121_floodgate":
         // Floodgate 拡張では評価値と PV を送信する。
         score = info?.score;
         info?.pv?.forEach((move) => {

@@ -343,7 +343,7 @@ export function defaultAppSetting(opt?: {
     topPaneHeightPercentage: 60,
     topPanePreviousHeightPercentage: 60,
     bottomLeftPaneWidthPercentage: 60,
-    defaultRecordFileFormat: RecordFileFormat.KIF,
+    defaultRecordFileFormat: ".kif",
     textDecodingRule: TextDecodingRule.AUTO_DETECT,
     returnCode: opt?.returnCode || "\r\n",
     autoSaveDirectory: opt?.autoSaveDirectory || "",

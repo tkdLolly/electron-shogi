@@ -1,6 +1,16 @@
-import { USIEngineSetting, validateUSIEngineSetting } from "./usi";
+import { USIEngineSetting, USIEngineSettingDef, validateUSIEngineSetting } from "./usi";
 import * as uri from "@/common/uri";
+import * as iots from "io-ts";
 
+export const PlayerSettingDef = iots.intersection([
+  iots.type({
+    name: iots.string,
+    uri: iots.string,
+  }),
+  iots.partial({
+    usi: USIEngineSettingDef,
+  }),
+]);
 export type PlayerSetting = {
   name: string;
   uri: string;

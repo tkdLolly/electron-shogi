@@ -11,20 +11,25 @@ import {
   exportJKFString,
   importJKFString,
 } from "electron-shogi-core";
+import * as iots from "io-ts";
 
-export enum RecordFileFormat {
-  KIF = ".kif",
-  KIFU = ".kifu",
-  KI2 = ".ki2",
-  KI2U = ".ki2u",
-  CSA = ".csa",
-  SFEN = ".sfen",
-  JKF = ".jkf",
-}
+export const RecordFileFormatDef = iots.union([
+  iots.literal(".kif"),
+  iots.literal(".kifu"),
+  iots.literal(".ki2"),
+  iots.literal(".ki2u"),
+  iots.literal(".csa"),
+  iots.literal(".sfen"),
+  iots.literal(".jkf"),
+]);
+export type RecordFileFormat = iots.TypeOf<typeof RecordFileFormatDef>;
 
 export function detectRecordFileFormatByPath(path: string): RecordFileFormat | undefined {
-  for (const ext of Object.values(RecordFileFormat)) {
-    if (path.toLowerCase().endsWith(ext)) {
+  const lowerCase = path.toLowerCase();
+  for (const ext of RecordFileFormatDef.types.map(
+    (x) => (x as iots.LiteralC<RecordFileFormat>).value,
+  )) {
+    if (lowerCase.endsWith(ext)) {
       return ext;
     }
   }
@@ -34,8 +39,8 @@ function getRecommendedEncodingByFileFormat(format: RecordFileFormat): "UTF8" | 
   switch (format) {
     default:
       return "UTF8";
-    case RecordFileFormat.KIF:
-    case RecordFileFormat.KI2:
+    case ".kif":
+    case ".ki2":
       return "SJIS";
   }
 }
@@ -50,17 +55,17 @@ export function importRecordFromBuffer(
     autoDetect: option?.autoDetect,
   });
   switch (format) {
-    case RecordFileFormat.KIF:
-    case RecordFileFormat.KIFU:
+    case ".kif":
+    case ".kifu":
       return importKIF(text);
-    case RecordFileFormat.KI2:
-    case RecordFileFormat.KI2U:
+    case ".ki2":
+    case ".ki2u":
       return importKI2(text);
-    case RecordFileFormat.CSA:
+    case ".csa":
       return importCSA(text);
-    case RecordFileFormat.SFEN:
+    case ".sfen":
       return new Error(".sfen file import is not supported");
-    case RecordFileFormat.JKF:
+    case ".jkf":
       return importJKFString(text);
   }
 }
@@ -83,20 +88,20 @@ export function exportRecordAsBuffer(
   const encoding = getRecommendedEncodingByFileFormat(format);
   let str: string;
   switch (format) {
-    case RecordFileFormat.KIF:
-    case RecordFileFormat.KIFU:
+    case ".kif":
+    case ".kifu":
       str = exportKIF(record, opt);
       break;
-    case RecordFileFormat.KI2:
-    case RecordFileFormat.KI2U:
+    case ".ki2":
+    case ".ki2u":
       str = exportKI2(record, opt);
       break;
-    case RecordFileFormat.CSA:
+    case ".csa":
       str = exportCSA(record, opt);
       break;
-    case RecordFileFormat.SFEN:
+    case ".sfen":
       throw new Error(".sfen file export is not supported");
-    case RecordFileFormat.JKF:
+    case ".jkf":
       str = exportJKFString(record);
   }
   const data = encodeText(str, encoding);

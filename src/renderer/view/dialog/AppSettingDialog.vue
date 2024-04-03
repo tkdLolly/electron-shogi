@@ -395,12 +395,12 @@
               class="selector"
               :value="defaultRecordFileFormat"
               :items="[
-                { label: '.kif (Shift_JIS)', value: RecordFileFormat.KIF },
-                { label: '.kifu (UTF-8)', value: RecordFileFormat.KIFU },
-                { label: '.ki2 (Shift_JIS)', value: RecordFileFormat.KI2 },
-                { label: '.ki2u (UTF-8)', value: RecordFileFormat.KI2U },
-                { label: '.csa', value: RecordFileFormat.CSA },
-                { label: '.jkf', value: RecordFileFormat.JKF },
+                { label: '.kif (Shift_JIS)', value: '.kif' },
+                { label: '.kifu (UTF-8)', value: '.kifu' },
+                { label: '.ki2 (Shift_JIS)', value: '.ki2' },
+                { label: '.ki2u (UTF-8)', value: '.ki2u' },
+                { label: '.csa', value: '.csa' },
+                { label: '.jkf', value: '.jkf' },
               ]"
               @change="
                 (value: string) => {

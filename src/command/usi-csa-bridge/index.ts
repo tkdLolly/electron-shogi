@@ -66,6 +66,7 @@ const language = argParser.value(
   [Language.JA, Language.EN, Language.ZH_TW],
 );
 argParser.parse();
+const configFilePath = argParser.args[0];
 
 // --------------------------------------------------------------------------------
 // Phase-2. Electron将棋の基本的な動作に必要なモジュールを読み込んで初期化します。
@@ -88,8 +89,9 @@ preload({
 import fs from "node:fs";
 import path from "node:path";
 import YAML from "yaml";
+import { isLeft } from "fp-ts/Either";
 import {
-  CSAGameSettingForCLI,
+  CSAGameSettingForCLIDef,
   CSAProtocolVersion,
   decompressCSAGameSettingForCLI,
   importCSAGameSettingForCLI,
@@ -101,33 +103,36 @@ import { CSAGameManager, loginRetryIntervalSeconds } from "@/renderer/store/csa"
 import { defaultPlayerBuilder } from "@/renderer/players/builder";
 import { getAppLogger } from "@/background/log";
 import { defaultRecordFileNameTemplate, generateRecordFileName } from "@/renderer/helpers/path";
-import { RecordFileFormat } from "@/common/file/record";
 import { ordinal } from "@/common/helpers/string";
 import { exists } from "@/background/helpers/file";
+import { formatErrors } from "@/common/helpers/iots";
 
 // --------------------------------------------------------------------------------
 // Phase-4. コマンド固有の処理を実行します。
 // --------------------------------------------------------------------------------
 
-async function main() {
-  // 設定ファイルを読み込みます。
-  const configFilePath = argParser.args[0];
-  let cliSetting: CSAGameSettingForCLI;
+async function loadSettingFile() {
   const base64Value = base64();
   if (base64Value) {
-    cliSetting = await decompressCSAGameSettingForCLI(base64Value);
-  } else {
-    if (!configFilePath) {
-      getAppLogger().error("config file is not specified.");
-      argParser.showHelp();
-      process.exit(1);
-    }
-    if (configFilePath.endsWith(".json")) {
-      cliSetting = JSON.parse(fs.readFileSync(configFilePath, "utf-8")) as CSAGameSettingForCLI;
-    } else {
-      cliSetting = YAML.parse(fs.readFileSync(configFilePath, "utf-8")) as CSAGameSettingForCLI;
-    }
+    return await decompressCSAGameSettingForCLI(base64Value);
   }
+  if (!configFilePath) {
+    getAppLogger().error("config file is not specified.");
+    argParser.showHelp();
+    process.exit(1);
+  }
+  const text = fs.readFileSync(configFilePath, "utf-8");
+  const raw = configFilePath.endsWith(".json") ? JSON.parse(text) : YAML.parse(text);
+  const either = CSAGameSettingForCLIDef.decode(raw);
+  if (isLeft(either)) {
+    throw new Error(`Invalid properties: ${formatErrors(either.left)}`);
+  }
+  return either.right;
+}
+
+async function main() {
+  // 設定ファイルを読み込みます。
+  const cliSetting = await loadSettingFile();
 
   // コマンドライン引数で指定された値で設定を上書きします。
   cliSetting.server.protocolVersion = (protocolVersion() ||
@@ -196,7 +201,7 @@ async function main() {
       recordFileNameTemplate() ||
         cliSetting.recordFileNameTemplate ||
         defaultRecordFileNameTemplate,
-      recordFileFormat() || cliSetting.recordFileFormat || RecordFileFormat.KIF,
+      recordFileFormat() || cliSetting.recordFileFormat || ".kif",
     );
     const dir = recordDir();
     const filePath = path.join(dir, fileName);
@@ -233,4 +238,7 @@ async function main() {
   }
 }
 
-main();
+main().catch((e) => {
+  getAppLogger().error(e);
+  process.exit(1);
+});

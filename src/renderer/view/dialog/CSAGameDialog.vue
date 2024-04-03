@@ -60,18 +60,15 @@
               value="CSA_v121"
               @change="onChangeProtocolVersion"
             >
-              <option :value="CSAProtocolVersion.V121">
+              <option :value="'v121'">
                 {{ t.csaProtocolV121 }}
               </option>
-              <option :value="CSAProtocolVersion.V121_FLOODGATE">
+              <option :value="'v121_floodgate'">
                 {{ t.csaProtocolV121WithPVComment }}
               </option>
             </select>
           </div>
-          <div
-            v-if="selectedProtocolVersion === CSAProtocolVersion.V121"
-            class="form-group warning"
-          >
+          <div v-if="selectedProtocolVersion === 'v121'" class="form-group warning">
             <div class="note">
               {{ t.notSendPVOnStandardCSAProtocol }}
             </div>
@@ -269,7 +266,6 @@ import { ref, onMounted, computed, onUpdated, onBeforeUnmount } from "vue";
 import api from "@/renderer/ipc/api";
 import { useStore } from "@/renderer/store";
 import {
-  CSAProtocolVersion,
   CSAGameSetting,
   validateCSAGameSetting,
   buildCSAGameSettingByHistory,
@@ -292,7 +288,7 @@ const store = useStore();
 const appSetting = useAppSetting();
 const dialog = ref();
 const protocolVersion = ref();
-const selectedProtocolVersion = ref(CSAProtocolVersion.V121);
+const selectedProtocolVersion = ref("v121");
 const host = ref();
 const port = ref();
 const id = ref();

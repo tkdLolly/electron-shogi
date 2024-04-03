@@ -13,7 +13,7 @@ import {
   CSAGameResult,
   CSASpecialMove,
 } from "@/common/game/csa";
-import { CSAProtocolVersion, CSAServerSetting } from "@/common/settings/csa";
+import { CSAServerSetting } from "@/common/settings/csa";
 import { Socket } from "./socket";
 import { Logger } from "log4js";
 import { t } from "@/common/i18n";
@@ -175,7 +175,7 @@ export class Client {
 
   logout(): void {
     switch (this.setting.protocolVersion) {
-      case CSAProtocolVersion.V121_FLOODGATE:
+      case "v121_floodgate":
         // Floodgate では LOGOUT コマンドを使用しない。
         if (this.socket) {
           this.logger.info("sid=%d: disconnect", this.sessionID);
@@ -285,7 +285,7 @@ export class Client {
     this.logger.info("sid=%d: connected", this.sessionID);
     this._state = State.CONNECTED;
     let suffix = "";
-    if (this.setting.protocolVersion === CSAProtocolVersion.V121_X1) {
+    if (this.setting.protocolVersion === "v121_x1") {
       suffix = " x1";
     }
     this.send(`LOGIN ${this.setting.id} ${this.setting.password}${suffix}`);

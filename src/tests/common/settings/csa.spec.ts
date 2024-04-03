@@ -2,12 +2,13 @@ import * as uri from "@/common/uri";
 import {
   appendCSAGameSettingHistory,
   CSAGameSetting,
-  CSAProtocolVersion,
+  CSAGameSettingHistory,
   decryptCSAGameSettingHistory,
   encryptCSAGameSettingHistory,
   exportCSAGameSettingForCLI,
   importCSAGameSettingForCLI,
   normalizeSecureCSAGameSettingHistory,
+  SecureCSAGameSettingHistory,
   validateCSAGameSetting,
 } from "@/common/settings/csa";
 import { defaultAppSetting } from "@/common/settings/app";
@@ -26,7 +27,7 @@ describe("settings/csa", () => {
         uri: uri.ES_HUMAN,
       },
       server: {
-        protocolVersion: CSAProtocolVersion.V121,
+        protocolVersion: "v121",
         host: "localhost",
         port: 4081,
         id: "TestUser",
@@ -50,7 +51,7 @@ describe("settings/csa", () => {
         uri: uri.ES_HUMAN,
       },
       server: {
-        protocolVersion: CSAProtocolVersion.V121,
+        protocolVersion: "v121",
         host: "",
         port: 4081,
         id: "TestUser",
@@ -74,7 +75,7 @@ describe("settings/csa", () => {
         uri: uri.ES_HUMAN,
       },
       server: {
-        protocolVersion: CSAProtocolVersion.V121,
+        protocolVersion: "v121",
         host: "localhost",
         port: 100000,
         id: "TestUser",
@@ -98,7 +99,7 @@ describe("settings/csa", () => {
         uri: uri.ES_HUMAN,
       },
       server: {
-        protocolVersion: CSAProtocolVersion.V121,
+        protocolVersion: "v121",
         host: "localhost",
         port: 4081,
         id: "",
@@ -122,7 +123,7 @@ describe("settings/csa", () => {
         uri: uri.ES_HUMAN,
       },
       server: {
-        protocolVersion: CSAProtocolVersion.V121,
+        protocolVersion: "v121",
         host: "localhost",
         port: 4081,
         id: "Test User",
@@ -146,7 +147,7 @@ describe("settings/csa", () => {
         uri: uri.ES_HUMAN,
       },
       server: {
-        protocolVersion: CSAProtocolVersion.V121,
+        protocolVersion: "v121",
         host: "localhost",
         port: 4081,
         id: "TestUser",
@@ -171,7 +172,7 @@ describe("settings/csa", () => {
       },
       serverHistory: [
         {
-          protocolVersion: CSAProtocolVersion.V121_FLOODGATE,
+          protocolVersion: "v121_floodgate",
           host: "test-server",
           port: 1234,
           id: "test-user",
@@ -184,7 +185,7 @@ describe("settings/csa", () => {
       repeat: 3,
       autoRelogin: false,
       restartPlayerEveryGame: false,
-    };
+    } as CSAGameSettingHistory;
     const result = normalizeSecureCSAGameSettingHistory(setting);
     expect(result).toStrictEqual(setting);
   });
@@ -249,7 +250,7 @@ describe("settings/csa", () => {
       },
       serverHistory: [
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server01",
           port: 4081,
           id: "user01",
@@ -257,7 +258,7 @@ describe("settings/csa", () => {
           tcpKeepalive: { initialDelay: 10 },
         },
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server02",
           port: 4081,
           id: "user02",
@@ -271,7 +272,7 @@ describe("settings/csa", () => {
       repeat: 1,
       autoRelogin: true,
       restartPlayerEveryGame: false,
-    };
+    } as CSAGameSettingHistory;
     const secure = encryptCSAGameSettingHistory(raw, (src) => {
       return (
         {
@@ -284,7 +285,7 @@ describe("settings/csa", () => {
       ...raw,
       serverHistory: [
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server01",
           port: 4081,
           id: "user01",
@@ -294,7 +295,7 @@ describe("settings/csa", () => {
           },
         },
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server02",
           port: 4081,
           id: "user02",
@@ -310,7 +311,7 @@ describe("settings/csa", () => {
       ...raw,
       serverHistory: [
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server01",
           port: 4081,
           id: "user01",
@@ -318,7 +319,7 @@ describe("settings/csa", () => {
           tcpKeepalive: { initialDelay: 10 },
         },
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server02",
           port: 4081,
           id: "user02",
@@ -337,7 +338,7 @@ describe("settings/csa", () => {
       },
       serverHistory: [
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server01",
           port: 4081,
           id: "user01",
@@ -345,7 +346,7 @@ describe("settings/csa", () => {
           tcpKeepalive: { initialDelay: 10 },
         },
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server02",
           port: 4081,
           id: "user02",
@@ -359,12 +360,12 @@ describe("settings/csa", () => {
       repeat: 1,
       autoRelogin: true,
       restartPlayerEveryGame: false,
-    };
+    } as SecureCSAGameSettingHistory;
     const insecure = {
       ...secure,
       serverHistory: [
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server03",
           port: 4081,
           id: "user03",
@@ -372,7 +373,7 @@ describe("settings/csa", () => {
           tcpKeepalive: { initialDelay: 10 },
         },
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server04",
           port: 4081,
           id: "user04",
@@ -380,7 +381,7 @@ describe("settings/csa", () => {
           tcpKeepalive: { initialDelay: 10 },
         },
       ],
-    };
+    } as CSAGameSettingHistory;
     const raw = decryptCSAGameSettingHistory(secure, (src) => {
       return (
         {
@@ -393,7 +394,7 @@ describe("settings/csa", () => {
       ...secure,
       serverHistory: [
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server01",
           port: 4081,
           id: "user01",
@@ -401,7 +402,7 @@ describe("settings/csa", () => {
           tcpKeepalive: { initialDelay: 10 },
         },
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server02",
           port: 4081,
           id: "user02",
@@ -415,7 +416,7 @@ describe("settings/csa", () => {
       ...secure,
       serverHistory: [
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server03",
           port: 4081,
           id: "user03",
@@ -423,7 +424,7 @@ describe("settings/csa", () => {
           tcpKeepalive: { initialDelay: 10 },
         },
         {
-          protocolVersion: CSAProtocolVersion.V121,
+          protocolVersion: "v121",
           host: "test-server04",
           port: 4081,
           id: "user04",

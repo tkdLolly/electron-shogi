@@ -1,10 +1,8 @@
-import { RecordFileFormat } from "@/common/file/record";
 import { CSAGameSummary } from "@/common/game/csa";
 import {
   CSAGameSetting,
   CSAGameSettingForCLI,
   CSAGameSettingHistory,
-  CSAProtocolVersion,
   CSAServerSetting,
 } from "@/common/settings/csa";
 import { PlayerSetting } from "@/common/settings/player";
@@ -55,7 +53,7 @@ const playerSetting: PlayerSetting = {
 };
 
 export const csaServerSetting: CSAServerSetting = {
-  protocolVersion: CSAProtocolVersion.V121,
+  protocolVersion: "v121",
   host: "test-server",
   port: 4081,
   id: "TestPlayer",
@@ -89,7 +87,7 @@ export const singleCSAGameSettingHistory: CSAGameSettingHistory = {
   player: playerSetting,
   serverHistory: [
     {
-      protocolVersion: CSAProtocolVersion.V121,
+      protocolVersion: "v121",
       host: "test-server",
       port: 4081,
       id: "TestPlayer",
@@ -199,7 +197,7 @@ export const csaGameSettingForCLI: CSAGameSettingForCLI = {
   saveRecordFile: true,
   enableComment: true,
   recordFileNameTemplate: defaultRecordFileNameTemplate,
-  recordFileFormat: RecordFileFormat.KIF,
+  recordFileFormat: ".kif",
   repeat: 1,
   autoRelogin: true,
   restartPlayerEveryGame: false,

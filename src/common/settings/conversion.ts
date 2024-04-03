@@ -27,19 +27,12 @@ export type BatchConversionSetting = {
 export function defaultBatchConversionSetting(): BatchConversionSetting {
   return {
     source: "",
-    sourceFormats: [
-      RecordFileFormat.KIF,
-      RecordFileFormat.KIFU,
-      RecordFileFormat.KI2,
-      RecordFileFormat.KI2U,
-      RecordFileFormat.CSA,
-      RecordFileFormat.JKF,
-    ],
+    sourceFormats: [".kif", ".kifu", ".ki2", ".ki2u", ".csa", ".jkf"],
     subdirectories: true,
     destinationType: DestinationType.DIRECTORY,
     destination: "",
     createSubdirectories: true,
-    destinationFormat: RecordFileFormat.KIF,
+    destinationFormat: ".kif",
     fileNameConflictAction: FileNameConflictAction.NUMBER_SUFFIX,
     singleFileDestination: "",
   };
