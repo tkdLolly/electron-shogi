@@ -13,14 +13,14 @@ export const Threads = "Threads";
 export const NumberOfThreads = "NumberOfThreads";
 export const MultiPV = "MultiPV";
 
-export const USIEngineOptionTypeDef = iots.union([
-  iots.literal("check"),
-  iots.literal("spin"),
-  iots.literal("combo"),
-  iots.literal("button"),
-  iots.literal("string"),
-  iots.literal("filename"),
-]);
+export const USIEngineOptionTypeDef = iots.keyof({
+  check: null,
+  spin: null,
+  combo: null,
+  button: null,
+  string: null,
+  filename: null,
+});
 export type USIEngineOptionType = iots.TypeOf<typeof USIEngineOptionTypeDef>;
 
 export const USIEngineOptionDef = iots.intersection([

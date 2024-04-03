@@ -18,11 +18,11 @@ import { base64Decode, base64Encode } from "encoding-japanese";
 import { isLeft } from "fp-ts/Either";
 import { formatErrors } from "@/common/helpers/iots";
 
-export const CSAProtocolVersionDef = iots.union([
-  iots.literal("v121"),
-  iots.literal("v121_floodgate"),
-  iots.literal("v121_x1"),
-]);
+export const CSAProtocolVersionDef = iots.keyof({
+  v121: null,
+  v121_floodgate: null,
+  v121_x1: null,
+});
 export type CSAProtocolVersion = iots.TypeOf<typeof CSAProtocolVersionDef>;
 
 export const TCPKeepaliveSettingDef = iots.type({

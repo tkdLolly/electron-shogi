@@ -13,24 +13,22 @@ import {
 } from "electron-shogi-core";
 import * as iots from "io-ts";
 
-export const RecordFileFormatDef = iots.union([
-  iots.literal(".kif"),
-  iots.literal(".kifu"),
-  iots.literal(".ki2"),
-  iots.literal(".ki2u"),
-  iots.literal(".csa"),
-  iots.literal(".sfen"),
-  iots.literal(".jkf"),
-]);
+export const RecordFileFormatDef = iots.keyof({
+  ".kif": null,
+  ".kifu": null,
+  ".ki2": null,
+  ".ki2u": null,
+  ".csa": null,
+  ".sfen": null,
+  ".jkf": null,
+});
 export type RecordFileFormat = iots.TypeOf<typeof RecordFileFormatDef>;
 
 export function detectRecordFileFormatByPath(path: string): RecordFileFormat | undefined {
   const lowerCase = path.toLowerCase();
-  for (const ext of RecordFileFormatDef.types.map(
-    (x) => (x as iots.LiteralC<RecordFileFormat>).value,
-  )) {
+  for (const ext of Object.keys(RecordFileFormatDef.keys)) {
     if (lowerCase.endsWith(ext)) {
-      return ext;
+      return ext as RecordFileFormat;
     }
   }
 }
