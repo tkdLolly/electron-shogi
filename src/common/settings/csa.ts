@@ -16,7 +16,7 @@ import { RecordFileFormatDef } from "@/common/file/record";
 import { AppSetting } from "./app";
 import { base64Decode, base64Encode } from "encoding-japanese";
 import { isLeft } from "fp-ts/Either";
-import { formatErrors } from "@/common/helpers/iots";
+import { formatFirstError } from "@/common/helpers/iots";
 
 export const CSAProtocolVersionDef = iots.keyof({
   v121: null,
@@ -446,7 +446,7 @@ export async function decompressCSAGameSettingForCLI(compressed: string) {
   const text = await new Response(cs.readable).text();
   const either = CSAGameSettingForCLIDef.decode(JSON.parse(text));
   if (isLeft(either)) {
-    throw new Error(`Invalid properties: ${formatErrors(either.left)}`);
+    throw new Error(formatFirstError(either.left));
   }
   return either.right;
 }

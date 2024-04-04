@@ -1,12 +1,14 @@
 import { Errors } from "io-ts";
-import { not } from "fp-ts/Predicate";
-import { isEmpty } from "fp-ts/string";
 
-export function formatErrors(errors: Errors) {
-  return errors.map((e) =>
-    e.context
+export function formatFirstError(errors: Errors): string {
+  if (errors.length === 0) {
+    return "Unknown error";
+  }
+  return (
+    "Invalid property: " +
+    errors[0].context
       .map(({ key }) => key)
-      .filter(not(isEmpty))
-      .join("."),
+      .filter((key) => !/^[0-9]+$/.test(key))
+      .join(".")
   );
 }

@@ -105,7 +105,7 @@ import { getAppLogger } from "@/background/log";
 import { defaultRecordFileNameTemplate, generateRecordFileName } from "@/renderer/helpers/path";
 import { ordinal } from "@/common/helpers/string";
 import { exists } from "@/background/helpers/file";
-import { formatErrors } from "@/common/helpers/iots";
+import { formatFirstError } from "@/common/helpers/iots";
 
 // --------------------------------------------------------------------------------
 // Phase-4. コマンド固有の処理を実行します。
@@ -125,7 +125,7 @@ async function loadSettingFile() {
   const raw = configFilePath.endsWith(".json") ? JSON.parse(text) : YAML.parse(text);
   const either = CSAGameSettingForCLIDef.decode(raw);
   if (isLeft(either)) {
-    throw new Error(`Invalid properties: ${formatErrors(either.left)}`);
+    throw new Error(formatFirstError(either.left));
   }
   return either.right;
 }
