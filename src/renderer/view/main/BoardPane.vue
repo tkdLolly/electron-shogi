@@ -30,7 +30,7 @@
     >
       <template #right-control>
         <div
-          v-show="appSetting.rightSideControlType !== RightSideControlType.NONE"
+          v-show="rightControlType !== RightSideControlType.NONE"
           ref="rightControl"
           class="full column top-control"
         >
@@ -201,7 +201,7 @@
       </template>
       <template #left-control>
         <div
-          v-show="appSetting.leftSideControlType !== LeftSideControlType.NONE"
+          v-show="leftControlType !== LeftSideControlType.NONE"
           ref="leftControl"
           class="full column reverse bottom-control"
         >
@@ -254,7 +254,15 @@
 
 <script setup lang="ts">
 import { t } from "@/common/i18n";
-import { computed, onUpdated, onBeforeUpdate, ref, onMounted, onBeforeUnmount } from "vue";
+import {
+  computed,
+  onUpdated,
+  onBeforeUpdate,
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  PropType,
+} from "vue";
 import BoardView from "@/renderer/view/primitive/BoardView.vue";
 import { Move, PositionChange, getBlackPlayerName, getWhitePlayerName } from "electron-shogi-core";
 import { RectSize } from "@/common/assets/geometry.js";
@@ -283,6 +291,16 @@ defineProps({
   maxSize: {
     type: RectSize,
     required: true,
+  },
+  leftControlType: {
+    type: String as PropType<LeftSideControlType>,
+    required: false,
+    default: LeftSideControlType.STANDARD,
+  },
+  rightControlType: {
+    type: String as PropType<RightSideControlType>,
+    required: false,
+    default: RightSideControlType.STANDARD,
   },
 });
 

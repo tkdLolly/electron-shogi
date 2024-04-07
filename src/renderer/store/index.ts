@@ -63,6 +63,7 @@ import { MateSearchManager } from "./mate";
 import { detectUnsupportedRecordProperties } from "@/renderer/helpers/record";
 import { RecordFileFormat, detectRecordFileFormatByPath } from "@/common/file/record";
 import { setOnUpdateUSIInfoHandler, setOnUpdateUSIPonderInfoHandler } from "@/renderer/players/usi";
+import { LayoutProfile, LayoutProfileConfig } from "@/common/settings/layout";
 
 export type PVPreview = {
   position: ImmutablePosition;
@@ -127,6 +128,7 @@ class Store {
   private _error = new ErrorStore();
   private recordManager = new RecordManager();
   private _appState = AppState.NORMAL;
+  private _customLayout: LayoutProfile | null = null;
   private _isAppSettingDialogVisible = false;
   private _confirmation?: Confirmation & { appState: AppState };
   private _pvPreview?: PVPreview;
@@ -349,6 +351,14 @@ class Store {
 
   get appState(): AppState {
     return this._appState;
+  }
+
+  get customLayout() {
+    return this._customLayout;
+  }
+
+  updateLayout(uri: string, profileConfig: LayoutProfileConfig): void {
+    this._customLayout = profileConfig.profiles.find((p) => p.uri === uri) || null;
   }
 
   get confirmation(): string | undefined {

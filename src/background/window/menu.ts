@@ -26,6 +26,7 @@ import { openBackupDirectory } from "@/background/file/history";
 import { openCacheDirectory } from "@/background/image/cache";
 import { refreshCustomPieceImages, sendTestNotification } from "./debug";
 import { LogType } from "@/common/log";
+import { createLayoutManagerWindow } from "./layout";
 
 const isWin = process.platform === "win32";
 const isMac = process.platform === "darwin";
@@ -312,6 +313,16 @@ function createMenuTemplate(window: BrowserWindow) {
     {
       label: t.view,
       submenu: [
+        {
+          label: "Open Layout Manager",
+          click: () => {
+            createLayoutManagerWindow(window);
+          },
+          accelerator: "CmdOrCtrl+L",
+        },
+        {
+          type: "separator",
+        },
         {
           label: t.toggleFullScreen,
           role: "togglefullscreen",

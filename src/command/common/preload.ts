@@ -299,6 +299,17 @@ export function preload(config: Config) {
       throw new Error("This feature is not available on command line tool");
     },
 
+    // Layout
+    async loadLayoutConfig(): Promise<[string, string]> {
+      throw new Error("This feature is not available on command line tool");
+    },
+    updateLayout(): void {
+      // Do Nothing
+    },
+    onUpdateLayout(): void {
+      // Do Nothing
+    },
+
     // Log
     openLogFile(): void {
       // Do Nothing

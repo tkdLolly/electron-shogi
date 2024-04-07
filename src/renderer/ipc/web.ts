@@ -5,7 +5,7 @@ import { defaultGameSetting } from "@/common/settings/game";
 import { defaultResearchSetting } from "@/common/settings/research";
 import { USIEngineSettings } from "@/common/settings/usi";
 import { LogLevel } from "@/common/log";
-import { Bridge } from "./bridge";
+import { Bridge } from "@/renderer/ipc/bridge";
 import { t } from "@/common/i18n";
 import { defaultCSAGameSettingHistory } from "@/common/settings/csa";
 import { defaultMateSearchSetting } from "@/common/settings/mate";
@@ -13,6 +13,8 @@ import { defaultBatchConversionSetting } from "@/common/settings/conversion";
 import { getEmptyHistory } from "@/common/file/history";
 import { VersionStatus } from "@/background/version/types";
 import { SessionStates } from "@/common/advanced/monitor";
+import { emptyLayoutProfileConfig } from "@/common/settings/layout";
+import * as uri from "@/common/uri";
 
 enum STORAGE_KEY {
   APP_SETTING = "appSetting",
@@ -324,6 +326,17 @@ export const webAPI: Bridge = {
   },
   async exportCaptureAsJPEG(): Promise<void> {
     throw new Error(t.thisFeatureNotAvailableOnWebApp);
+  },
+
+  // Layout
+  async loadLayoutConfig(): Promise<[string, string]> {
+    return [uri.ES_STANDARD_LAYOUT_PROFILE, JSON.stringify(emptyLayoutProfileConfig())];
+  },
+  updateLayout(): void {
+    // Do Nothing
+  },
+  onUpdateLayout(): void {
+    // Do Nothing
   },
 
   // Log

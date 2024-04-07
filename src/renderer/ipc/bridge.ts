@@ -108,6 +108,11 @@ export interface Bridge {
   exportCaptureAsPNG(json: string): Promise<void>;
   exportCaptureAsJPEG(json: string): Promise<void>;
 
+  // Layout
+  loadLayoutConfig(): Promise<[string, string]>;
+  updateLayout(uri: string, profileConfig: string): void;
+  onUpdateLayout(callback: (uri: string, json: string) => void): void;
+
   // Log
   openLogFile(logType: LogType): void;
   log(level: LogLevel, message: string): void;

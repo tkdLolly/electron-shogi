@@ -3,7 +3,7 @@ import { AppState } from "@/common/control/state";
 import { GameResult } from "@/common/game/result";
 import { contextBridge, ipcRenderer } from "electron";
 import { Background, Renderer } from "@/common/ipc/channel";
-import { Bridge } from "./bridge";
+import { Bridge } from "@/renderer/ipc/bridge";
 import { LogType, LogLevel } from "@/common/log";
 import { CSAGameResult, CSASpecialMove } from "@/common/game/csa";
 import { PromptTarget } from "@/common/advanced/prompt";
@@ -296,6 +296,19 @@ const api: Bridge = {
   },
   async exportCaptureAsJPEG(json: string): Promise<void> {
     await ipcRenderer.invoke(Background.EXPORT_CAPTURE_AS_JPEG, json);
+  },
+
+  // Layout
+  async loadLayoutConfig(): Promise<[string, string]> {
+    return await ipcRenderer.invoke(Background.LOAD_LAYOUT_CONFIG);
+  },
+  updateLayout(uri: string, profileConfig: string): void {
+    ipcRenderer.send(Background.UPDATE_LAYOUT, uri, profileConfig);
+  },
+  onUpdateLayout(callback: (uri: string, json: string) => void): void {
+    ipcRenderer.on(Renderer.UPDATE_LAYOUT, (_, uri, json) => {
+      callback(uri, json);
+    });
   },
 
   // Log

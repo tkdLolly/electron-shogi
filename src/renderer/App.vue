@@ -1,6 +1,14 @@
 <template>
   <div class="root full" :class="appSetting.thema" :style="style">
-    <StandardLayout class="full" />
+    <!-- Main Contents -->
+    <CustomLayout v-if="store.customLayout" :profile="store.customLayout" />
+    <StandardLayout v-else class="full" />
+
+    <!-- Dialogs -->
+    <BussyMessage v-if="store.isBussy" />
+    <InfoMessage v-if="store.hasMessage" />
+    <ErrorMessage v-if="store.hasError" />
+    <ConfirmDialog v-if="store.confirmation" />
     <GameDialog v-if="store.appState === AppState.GAME_DIALOG" />
     <CSAGameDialog v-if="store.appState === AppState.CSA_GAME_DIALOG" />
     <ResearchDialog v-if="store.appState === AppState.RESEARCH_DIALOG" />
@@ -16,8 +24,6 @@
     <ConnectToCSAServerDialog v-if="store.appState === AppState.CONNECT_TO_CSA_SERVER_DIALOG" />
     <LoadRemoteFileDialog v-if="store.appState === AppState.LOAD_REMOTE_FILE_DIALOG" />
     <PieceSetChangeDialog v-if="store.appState === AppState.PIECE_SET_CHANGE_DIALOG" />
-    <BussyMessage v-if="store.isBussy" />
-    <ConfirmDialog v-if="store.confirmation" />
     <CSAGameReadyDialog
       v-if="
         store.csaGameState === CSAGameState.PLAYER_SETUP ||
@@ -39,8 +45,6 @@
       :pv="store.pvPreview.pv"
       @close="store.closePVPreviewDialog()"
     />
-    <InfoMessage v-if="store.hasMessage" />
-    <ErrorMessage v-if="store.hasError" />
   </div>
 </template>
 
@@ -73,6 +77,7 @@ import LaunchUSIEngineDialog from "./view/dialog/LaunchUSIEngineDialog.vue";
 import ConnectToCSAServerDialog from "./view/dialog/ConnectToCSAServerDialog.vue";
 import PieceSetChangeDialog from "./view/dialog/PieceSetChangeDialog.vue";
 import LoadRemoteFileDialog from "./view/dialog/LoadRemoteFileDialog.vue";
+import CustomLayout from "./view/main/CustomLayout.vue";
 
 const appSetting = useAppSetting();
 const store = useStore();

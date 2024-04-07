@@ -12,7 +12,7 @@ import {
   onUSINoMate,
 } from "@/renderer/players/usi";
 import { humanPlayer } from "@/renderer/players/human";
-import { bridge } from "./api";
+import { bridge } from "@/renderer/ipc/api";
 import { MenuEvent } from "@/common/control/menu";
 import { USIInfoCommand } from "@/common/game/usi";
 import { AppState } from "@/common/control/state";
@@ -275,6 +275,11 @@ export function setup(): void {
   });
   bridge.onCSAGameResult(onCSAGameResult);
   bridge.onCSAClose(onCSAClose);
+
+  // Layout
+  bridge.onUpdateLayout((uri, json) => {
+    store.updateLayout(uri, JSON.parse(json));
+  });
 }
 
 export function setupPrompt(): void {

@@ -7,6 +7,13 @@
         :history-mode="historyMode"
         :info="monitor"
         :height="elementHeight"
+        :show-header="showHeader"
+        :show-time-column="showTimeColumn"
+        :show-multi-pv-column="showMultiPvColumn"
+        :show-depth-column="showDepthColumn"
+        :show-nodes-column="showNodesColumn"
+        :show-score-column="showScoreColumn"
+        :show-play-button="showPlayButton"
       />
     </div>
   </div>
@@ -19,14 +26,15 @@ import EngineAnalyticsElement from "@/renderer/view/tab/EngineAnalyticsElement.v
 import { RectSize } from "@/common/assets/geometry.js";
 
 const props = defineProps({
-  size: {
-    type: RectSize,
-    required: true,
-  },
-  historyMode: {
-    type: Boolean,
-    required: true,
-  },
+  size: { type: RectSize, required: true },
+  historyMode: { type: Boolean, required: true },
+  showHeader: { type: Boolean, default: true },
+  showTimeColumn: { type: Boolean, default: true },
+  showMultiPvColumn: { type: Boolean, default: true },
+  showDepthColumn: { type: Boolean, default: true },
+  showNodesColumn: { type: Boolean, default: true },
+  showScoreColumn: { type: Boolean, default: true },
+  showPlayButton: { type: Boolean, default: true },
 });
 
 const store = useStore();
