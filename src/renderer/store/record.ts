@@ -1,7 +1,6 @@
 import { getDateString, getDateTimeString } from "@/common/helpers/datetime";
 import { TimeLimitSetting } from "@/common/settings/game";
 import {
-  secondsToMSS,
   detectRecordFormat,
   DoMoveOption,
   exportKIF,
@@ -44,6 +43,7 @@ import {
 import { SCORE_MATE_INFINITE } from "@/common/game/usi";
 import api from "@/renderer/ipc/api";
 import { LogLevel } from "@/common/log";
+import { secondsToMMSS } from "@/common/helpers/time";
 
 export enum SearchInfoSenderType {
   PLAYER,
@@ -225,15 +225,20 @@ function getPVsFromSearchComment(position: ImmutablePosition, comment: string): 
     .filter((pv) => pv.length !== 0);
 }
 
-function formatTimeLimitCSA(setting: TimeLimitSetting): string {
-  return secondsToMSS(setting.timeSeconds) + "+" + String(setting.byoyomi).padStart(2, "0");
+function formatTimeLimitCSAV3(setting: TimeLimitSetting): string {
+  return setting.timeSeconds + "+" + setting.byoyomi + "+" + setting.increment;
+}
+
+function formatTimeLimitCSAV2(setting: TimeLimitSetting): string {
+  return secondsToMMSS(setting.timeSeconds) + "+" + String(setting.byoyomi).padStart(2, "0");
 }
 
 type GameStartMetadata = {
   gameTitle?: string;
   blackName?: string;
   whiteName?: string;
-  timeLimit?: TimeLimitSetting;
+  blackTimeLimit?: TimeLimitSetting;
+  whiteTimeLimit?: TimeLimitSetting;
 };
 
 type AppendMoveParams = {
@@ -632,11 +637,31 @@ export class RecordManager {
       RecordMetadataKey.START_DATETIME,
       getDateTimeString(),
     );
-    if (metadata.timeLimit) {
-      this._record.metadata.setStandardMetadata(
-        RecordMetadataKey.TIME_LIMIT,
-        formatTimeLimitCSA(metadata.timeLimit),
-      );
+    const useCSAV3Time = metadata.blackTimeLimit?.increment || metadata.whiteTimeLimit?.increment;
+    if (
+      metadata.blackTimeLimit &&
+      metadata.whiteTimeLimit &&
+      metadata.blackTimeLimit.timeSeconds === metadata.whiteTimeLimit.timeSeconds &&
+      metadata.blackTimeLimit.byoyomi === metadata.whiteTimeLimit.byoyomi &&
+      metadata.blackTimeLimit.increment === metadata.whiteTimeLimit.increment
+    ) {
+      const csaTime = useCSAV3Time
+        ? formatTimeLimitCSAV3(metadata.blackTimeLimit)
+        : formatTimeLimitCSAV2(metadata.blackTimeLimit);
+      this._record.metadata.setStandardMetadata(RecordMetadataKey.TIME_LIMIT, csaTime);
+    } else {
+      if (metadata.blackTimeLimit) {
+        const csaTime = useCSAV3Time
+          ? formatTimeLimitCSAV3(metadata.blackTimeLimit)
+          : formatTimeLimitCSAV2(metadata.blackTimeLimit);
+        this._record.metadata.setStandardMetadata(RecordMetadataKey.BLACK_TIME_LIMIT, csaTime);
+      }
+      if (metadata.whiteTimeLimit) {
+        const csaTime = useCSAV3Time
+          ? formatTimeLimitCSAV3(metadata.whiteTimeLimit)
+          : formatTimeLimitCSAV2(metadata.whiteTimeLimit);
+        this._record.metadata.setStandardMetadata(RecordMetadataKey.WHITE_TIME_LIMIT, csaTime);
+      }
     }
     this._unsaved = true;
   }
