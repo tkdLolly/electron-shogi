@@ -10,6 +10,7 @@ import {
   importKIF,
   exportJKFString,
   importJKFString,
+  CSAV3Options,
 } from "electron-shogi-core";
 
 export enum RecordFileFormat {
@@ -65,9 +66,14 @@ export function importRecordFromBuffer(
   }
 }
 
+type CSAOptions = {
+  v3?: boolean;
+};
+
 export type ExportOptions = {
   returnCode?: string;
   detectGarbled?: boolean;
+  csa?: CSAOptions;
 };
 
 export type ExportResult = {
@@ -92,7 +98,10 @@ export function exportRecordAsBuffer(
       str = exportKI2(record, opt);
       break;
     case RecordFileFormat.CSA:
-      str = exportCSA(record, opt);
+      str = exportCSA(record, {
+        ...opt,
+        v3: opt.csa?.v3 ? { milliseconds: true } : undefined,
+      });
       break;
     case RecordFileFormat.SFEN:
       throw new Error(".sfen file export is not supported");
