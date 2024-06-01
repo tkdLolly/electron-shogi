@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import api, { API } from "@/renderer/ipc/api";
 import { Move } from "electron-shogi-core";
-import { createStore } from "@/renderer/store";
+import { createStore, ResearchState } from "@/renderer/store";
 import { RecordCustomData } from "@/renderer/store/record";
 import * as audio from "@/renderer/devices/audio";
 import { gameSetting10m30s } from "@/tests/mock/game";
@@ -328,7 +328,7 @@ describe("store/index", () => {
     store.startResearch(researchSetting);
     await new Promise((resolve) => setTimeout(resolve));
     expect(store.isBussy).toBeFalsy();
-    expect(store.appState).toBe(AppState.RESEARCH);
+    expect(store.researchState).toBe(ResearchState.RUNNING);
     expect(mockAPI.saveResearchSetting).toBeCalledTimes(1);
     expect(mockUSIPlayer).toBeCalledTimes(1);
     expect(mockUSIPlayer.mock.calls[0][0]).toBe(researchSetting.usi);

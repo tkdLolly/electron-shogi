@@ -8,8 +8,6 @@ export enum AppState {
   GAME = "game",
   CSA_GAME_DIALOG = "csaGameDialog",
   CSA_GAME = "csaGame",
-  RESEARCH = "research",
-  RESEARCH_DIALOG = "researchDialog",
   ANALYSIS = "analysis",
   ANALYSIS_DIALOG = "analysisDialog",
   MATE_SEARCH = "mateSearch",
